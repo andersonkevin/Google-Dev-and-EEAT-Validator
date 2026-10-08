@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="480" viewBox="0 0 1280 480" role="img" aria-labelledby="title desc">
+  <title id="title">Google Dev and E-E-A-T Validator: review the draft, keep the evidence</title>
+  <desc id="desc">An editorial review CLI connecting a content bundle to mechanical checks and human review. 46 checks, 17 mechanical checks and 29 contextual or evidence reviews. No ranking score or automatic publishing.</desc>
+  <rect width="1280" height="480" rx="12" fill="#101917"/>
+  <path d="M0 1H1280" stroke="#74dfb3" stroke-width="3"/>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="48" y="56" fill="#a7c9bc" font-size="16" font-weight="700">EDITORIAL REVIEW / LOCAL-FIRST / v1.0.0</text>
+    <text x="48" y="132" fill="#f5f8f6" font-size="52" font-weight="700">Review the draft.</text>
+    <text x="48" y="194" fill="#74dfb3" font-size="52" font-weight="700">Keep the evidence.</text>
+    <text x="48" y="243" fill="#c6d6ce" font-size="20">Google Dev and E-E-A-T Validator</text>
+    <text x="48" y="281" fill="#a7bbb1" font-size="17">Checks for the code. Context for the editor.</text>
+    <text x="48" y="309" fill="#a7bbb1" font-size="17">The publication decision stays with you.</text>
+    <path d="M48 346H602" stroke="#34473e"/>
+    <text x="48" y="389" fill="#f5f8f6" font-size="30" font-weight="700">46</text>
+    <text x="48" y="419" fill="#a7bbb1" font-size="15">TOTAL CHECKS</text>
+    <text x="247" y="389" fill="#74dfb3" font-size="30" font-weight="700">17</text>
+    <text x="247" y="419" fill="#a7bbb1" font-size="15">MECHANICAL</text>
+    <text x="443" y="389" fill="#ebc684" font-size="30" font-weight="700">29</text>
+    <text x="443" y="419" fill="#a7bbb1" font-size="15">REVIEW CHECKS</text>
+    <rect x="690" y="48" width="542" height="384" rx="8" fill="#192721" stroke="#3a5146"/>
+    <text x="718" y="82" fill="#c6d6ce" font-size="14" font-weight="700">A REVIEW PATH, NOT A RANKING SCORE</text>
+    <path d="M690 103H1232" stroke="#3a5146"/>
+    <path d="M744 158V330" stroke="#526d5f" stroke-width="2"/>
+    <circle cx="744" cy="143" r="16" fill="#b5d8fa"/>
+    <text x="744" y="149" text-anchor="middle" fill="#102c44" font-size="15" font-weight="700">1</text>
+    <text x="780" y="149" fill="#f5f8f6" font-size="21" font-weight="700">Bring the content</text>
+    <text x="780" y="177" fill="#b5c9be" font-size="16">HTML + brief + supporting evidence</text>
+    <circle cx="744" cy="232" r="16" fill="#74dfb3"/>
+    <text x="744" y="238" text-anchor="middle" fill="#10392b" font-size="15" font-weight="700">2</text>
+    <text x="780" y="238" fill="#f5f8f6" font-size="21" font-weight="700">Run the checks</text>
+    <text x="780" y="266" fill="#b5c9be" font-size="16">Findings, source links and review queues</text>
+    <circle cx="744" cy="321" r="16" fill="#ebc684"/>
+    <text x="744" y="327" text-anchor="middle" fill="#44310d" font-size="15" font-weight="700">3</text>
+    <text x="780" y="327" fill="#f5f8f6" font-size="21" font-weight="700">Review with context</text>
+    <text x="780" y="355" fill="#b5c9be" font-size="16">Human judgment and owner approval</text>
+    <path d="M718 380H1204" stroke="#3a5146"/>
+    <text x="718" y="410" fill="#a7bbb1" font-size="14">INDEPENDENT PROJECT / NO GOOGLE AFFILIATION</text>
+  </g>
+</svg>
