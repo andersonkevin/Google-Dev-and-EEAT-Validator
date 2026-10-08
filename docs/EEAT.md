@@ -15,9 +15,11 @@ gaps. It contains no retained source text or private snapshot identifiers.
 
 Context and supporting quality are not additional Google E-E-A-T dimensions.
 The map is a research artifact, not a new runtime score or 20 extra enforced rules.
-Eight criteria have existing manual coverage, ten are partial and two lack a
-sufficient dedicated check. A broad rule pass does not prove that each mapped
-subcriterion received a separate review.
+In v1, eight criteria had existing broad manual coverage, ten were partial and two
+lacked dedicated coverage. The map's coverage/gap fields preserve that baseline.
+V2 requires an explicit, evidenced AI or human decision for every criterion;
+it does not turn their interpretation into an automatic check. Broad-rule passes
+cannot fill those decisions. Missing decisions remain needs_review.
 
 Google identifies trust as central and describes context-dependent contributions
 from experience, expertise and authority. It does not define a single E-E-A-T
@@ -32,7 +34,7 @@ ranking score. [Google's explanation](https://developers.google.com/search/docs/
 - Valid JSON-LD does not make the represented identity or outcome true.
 - Missing recognition for a new creator is different from credible adverse evidence.
 
-Reviews require human interpretation. Unknown support for a material claim should
+Reviews require contextual interpretation by the operating agent or human. Unknown support for a material claim should
 remain unresolved or lead to narrower wording, not a fabricated pass. Unknown
 public reputation should not automatically block a useful, substantiated contribution.
 
@@ -45,10 +47,15 @@ Review/testing criteria apply when the content actually makes review or test cla
 
 ## Remaining Work
 
-The two dedicated-rule gaps concern contextual accountability/user protection
-and production-method transparency. Existing factual-review checks cover only
-part of the latter. Criterion-level receipts, evidence relationships, independent
-labeling and real-content calibration remain open.
+TRUST-06 (accountability/user protection) and QUALITY-02 (production transparency)
+now have explicit criterion-level review gates, as do the other 18 entries.
+Their applicability remains contextual: no universal contact form, individual byline
+or AI disclosure is imposed. This is local review policy, not a Google algorithm.
+
+Actor provenance, evidence IDs and current fingerprints make decisions auditable;
+they do not verify the evidence's meaning or the reviewer identity. Independent
+labeling, real-content calibration and richer semantic evidence relationships remain
+open. See [CALIBRATION.md](CALIBRATION.md).
 
 This mapping does not establish Google's assessment of any page. Read the linked
 source in context and check its current guidance before changing policy.

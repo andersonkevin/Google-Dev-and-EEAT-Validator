@@ -1,0 +1,4 @@
+interface:
+  display_name: "Google Dev and E-E-A-T Review"
+  short_description: "Evidence-led editorial review with a local validator"
+  default_prompt: "Use $google-dev-eeat-review to evaluate this draft, inspect its evidence, and return a v2 review receipt without publishing."

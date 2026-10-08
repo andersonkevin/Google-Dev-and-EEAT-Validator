@@ -52,14 +52,20 @@ class ValidatorTests(unittest.TestCase):
 
     def reviews(self, changes=None):
         report = self.report()
-        decisions = [{"rule_id": f["rule_id"], "status": "pass", "reviewer": "Synthetic owner",
+        decisions = [{"rule_id": f["rule_id"], "status": "pass", "reviewer": "Synthetic reviewer",
                       "reason": "Fixture adjudication", "reviewed_at": "2026-10-08", "evidence_ids": ["e1"]}
                      for f in report["findings"] if f["status"] == "needs_review"]
         for d in decisions:
             if changes and d["rule_id"] in changes:
                 d.update(changes[d["rule_id"]])
         path = self.root / "reviews.json"
-        path.write_text(json.dumps({"fingerprint": report["fingerprint"], "decisions": decisions}))
+        base = {"status": "pass", "reviewer": "Synthetic reviewer", "reason": "Fixture adjudication",
+                "reviewed_at": "2026-10-08", "evidence_ids": ["e1"]}
+        path.write_text(json.dumps({"schema_version": 2, "purpose": "content_review",
+            "actor": {"kind": "human", "identity": "Synthetic reviewer", "relationship_to_author": "human_review"},
+            "fingerprint": report["fingerprint"], "decisions": decisions,
+            "criteria": [base | {"criterion_id": c["criterion_id"]} for c in report["eeat_criteria"]],
+            "sources": [base | {"source": s["source"]} for s in report["source_reviews"]]}))
         return path
 
     def test_clean_draft_requires_human_review(self):

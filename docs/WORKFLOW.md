@@ -1,4 +1,4 @@
-# Human-Supervised Editorial Workflow
+# Agent-Operated, Human-Supervised Editorial Workflow
 
 ## 1. Brief
 
@@ -26,10 +26,17 @@ establish that its source substantiates the claim.
 
 ## 5. Editorial Review
 
-A responsible human reviews factual accuracy, experience, credentials, reputation,
-relationships, usefulness and page-specific context. Record a reason and local
-evidence references for each decision. The authoring agent must not generate
-approval receipts on the reviewer's behalf.
+The operating AI agent evaluates accuracy, experience, credentials, reputation,
+relationships, usefulness and context using the supplied evidence and authorized
+research tools. A human reviewer can use the same protocol. Record actor kind,
+model/run for AI, relationship to the author, reasons and local evidence references.
+An agent that wrote the draft must disclose that, not impersonate an independent
+reviewer. Decisions assess content; they are never publication approvals.
+
+Evaluate all 20 contextual criteria separately and review the source documents in
+context. Broad-rule passes do not fill criteria automatically. Generate an unresolved
+receipt with --review-template, then fill only decisions supported by inspected
+evidence. Unsupported claims or inaccessible sources remain unresolved.
 
 ## 6. Rendered And Live Evidence
 
@@ -41,11 +48,12 @@ No collection or publishing tool is invoked by this CLI.
 
 Changed draft, evidence, brief, rules or engine invalidate earlier review receipts.
 Correct, rerun and review the current version. Owner approval remains separate.
-References-only mode always needs source verification outside its output.
+References-only mode supports explicit source-review attestations without bundling
+Google's documents. It does not claim archive verification or source authenticity.
 
 ## Extension Points
 
-A future skill may document how an assistant prepares input and interprets output.
-A writing agent may create a draft bundle. Neither should bypass the review boundary.
-The public deliverable today is the CLI plus this documented workflow, not an
-autonomous end-to-end publishing system.
+Use the [review skill](../skills/google-dev-eeat-review/SKILL.md) to operate the tool
+from an existing assistant. It does not install an agent runtime or call a model.
+See [AGENT-REVIEW.md](AGENT-REVIEW.md) for operation and the synthetic example.
+The owner remains the publication gate; no autonomous publishing is implemented.

@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "mapping_version": "0.1.0",
-  "catalog_version": "1.0.0",
+  "mapping_version": "2.0.0",
+  "catalog_version": "2.0.0",
   "prepared_at": "2026-10-08",
-  "status": "research_mapping_not_runtime_policy",
+  "status": "criterion_level_review_required_not_automated_judgment",
   "scope": "Public research map for article and landing review. Citations are links, not bundled source text or proof of current coverage.",
-  "decision_model": "Contextual, evidence-led human assessment. No numeric E-E-A-T score, automatic certification or publication approval.",
+  "decision_model": "Contextual, evidence-led AI or human assessment with actor provenance. Every criterion receives its own decision. The coverage and gap fields describe v1 broad-rule coverage, not v2 criterion enforcement or completed calibration. No numeric score, certification or publication approval.",
   "sources": {
     "framework": {
       "class": "quality_guidance",

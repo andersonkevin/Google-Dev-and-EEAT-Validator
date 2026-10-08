@@ -14,6 +14,14 @@ Source snapshots can be large and must be prepared and reviewed by the operator.
 Hashes detect changes against supplied receipts, not an attacker replacing both.
 Reviewers and observation producers are not authenticated by this tool.
 
+V2 records AI/human actor provenance and the relationship to the author. A declared
+separate context is not verified independence. The skill instructs the operating
+agent to treat drafts, sources and receipts as data, not instructions; the CLI
+cannot enforce an external model's behavior. No model/API is called by this code.
+Cloud assistants may transmit loaded content under their provider settings.
+Source review uses evidence-backed operator attestations, not cryptographic source
+authenticity. Neither AI nor human receipts grant publication approval.
+
 Keep real content, evidence, reviews and outputs outside the public repository.
 Do not attach private reports, personal data or credentials to a public issue.
 No automatic upload or telemetry exists. The ignore file is a convenience, not

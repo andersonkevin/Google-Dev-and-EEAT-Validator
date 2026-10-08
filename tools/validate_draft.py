@@ -8,10 +8,10 @@ import json
 from pathlib import Path
 import re
 import sys
-from urllib.parse import unquote, urlsplit
+from urllib.parse import unquote, urldefrag, urlsplit
 
 from knowledge import safe_read
-from rule_catalog import VERSION, catalog, profile_prompt
+from rule_catalog import VERSION, catalog, criteria_map, profile_prompt
 
 MAX_BYTES = 8 * 1024 * 1024
 
@@ -354,11 +354,53 @@ def load_observations(root, bundle, content, evidence_hashes, rules):
     return records, hashes, context
 
 
+def review_actor(receipt):
+    actor = receipt.get("actor")
+    if not isinstance(actor, dict) or actor.get("kind") not in ("ai", "human") or not nonempty(actor.get("identity")):
+        raise ValueError("Review requires an identified AI or human actor")
+    relationships = {"ai": {"same_agent", "separate_context", "unknown"},
+                     "human": {"human_review", "unknown"}}
+    if actor.get("relationship_to_author") not in relationships[actor["kind"]]:
+        raise ValueError("Declare the reviewer's relationship to the author")
+    if actor["kind"] == "ai" and any(not nonempty(actor.get(k)) for k in ("model", "run_id")):
+        raise ValueError("AI review requires model and run_id; use not_exposed for an unavailable model name")
+    if receipt.get("purpose") not in ("content_review", "illustration"):
+        raise ValueError("Review requires content_review or illustration purpose")
+    return actor
+
+
+def review_records(items, key, known, evidence_hashes, allow_na=True):
+    if not isinstance(items, list):
+        raise ValueError(key + " decisions must be a list")
+    records = {}
+    allowed = {"pass", "fail", "needs_review"} | ({"not_applicable"} if allow_na else set())
+    for decision in items:
+        if not isinstance(decision, dict):
+            raise ValueError("Review decisions must be objects")
+        identifier = decision.get(key)
+        if not isinstance(identifier, str) or identifier not in known or identifier in records:
+            raise ValueError("Unknown, duplicate or non-reviewable " + key)
+        if decision.get("status") not in allowed or any(not nonempty(decision.get(k)) for k in ("reviewer", "reason")):
+            raise ValueError("Decision requires status, reviewer and reason")
+        if not valid_date(decision.get("reviewed_at")):
+            raise ValueError("Review date must be ISO date or timezone-qualified datetime")
+        refs = decision.get("evidence_ids")
+        if (not isinstance(refs, list) or not all(isinstance(ref, str) for ref in refs)
+                or len(refs) != len(set(refs)) or not set(refs) <= set(evidence_hashes)
+                or (not refs and decision["status"] != "needs_review")):
+            raise ValueError("Resolved decisions require distinct, known local evidence references")
+        records[identifier] = decision
+    return records
+
+
 def validate(path, snapshot=None, review_path=None, references_only=False):
     if (snapshot is None) != references_only:
         raise ValueError("Choose exactly one: a local snapshot or explicit references-only mode")
     bundle, content, evidence_hashes = load_bundle(path)
     rules = catalog()
+    mapping = criteria_map()
+    required_sources = sorted({urldefrag(r["source"])[0] for r in rules}
+                              | {urldefrag(url)[0] for source in mapping["sources"].values() for url in source["urls"]})
     observations, observation_hashes, context_hash = load_observations(path.parent, bundle, content, evidence_hashes, rules)
     if references_only:
         audit = {"complete_within_scope": False, "chunks_sha256": None}
@@ -369,31 +411,32 @@ def validate(path, snapshot=None, review_path=None, references_only=False):
                  + Path(__file__).with_name("knowledge.py").read_bytes())
     fingerprint = sha(canonical({"bundle": bundle, "content": sha(content), "evidence": evidence_hashes,
                                  "rules": rules, "engine": engine, "source_index": audit["chunks_sha256"],
-                                 "observations": observation_hashes, "references_only": references_only}))
+                                 "observations": observation_hashes, "references_only": references_only,
+                                 "criteria_map": mapping}))
     page = Page(content.decode("utf-8"))
     decisions = {}
+    criterion_decisions, source_decisions = {}, {}
+    actor, review_hash, review_purpose = None, None, None
     review_error = None
     if review_path:
-        receipt = read_json(read_input(review_path.parent, review_path.name))
-        if not isinstance(receipt, dict) or not isinstance(receipt.get("decisions"), list):
-            raise ValueError("Review receipt requires a decisions list")
+        raw_review = read_input(review_path.parent, review_path.name)
+        review_hash = sha(raw_review)
+        receipt = read_json(raw_review)
+        if not isinstance(receipt, dict) or type(receipt.get("schema_version")) is not int or receipt["schema_version"] != 2:
+            raise ValueError("Expected review schema_version 2; v1 receipts require fresh review")
         if receipt.get("fingerprint") != fingerprint:
             review_error = "Review is stale or belongs to different inputs; no decisions applied."
         else:
-            for d in receipt.get("decisions", []):
-                if not isinstance(d, dict):
-                    raise ValueError("Review decisions must be objects")
-                rid = d.get("rule_id")
-                if rid in decisions or rid not in {r["id"] for r in rules if r["method"] in ("human", "rendered")}:
-                    raise ValueError("Unknown, duplicate or non-reviewable decision")
-                if d.get("status") not in ("pass", "fail", "not_applicable") or any(not nonempty(d.get(k)) for k in ("reviewer", "reason", "reviewed_at")):
-                    raise ValueError("Incomplete human decision")
-                if not valid_date(d["reviewed_at"]):
-                    raise ValueError("Review date must be ISO date or timezone-qualified datetime")
-                refs = d.get("evidence_ids", [])
-                if not isinstance(refs, list) or not refs or not all(isinstance(ref, str) for ref in refs) or not set(refs) <= set(evidence_hashes):
-                    raise ValueError("Human decisions require local evidence references")
-                decisions[rid] = d
+            actor = review_actor(receipt)
+            review_purpose = receipt["purpose"]
+            decisions = review_records(receipt.get("decisions"), "rule_id",
+                {r["id"] for r in rules if r["method"] in ("editorial", "rendered")}, evidence_hashes)
+            criterion_decisions = review_records(receipt.get("criteria", []), "criterion_id",
+                {c["id"] for c in mapping["criteria"]}, evidence_hashes)
+            source_decisions = review_records(receipt.get("sources", []), "source",
+                set(required_sources), evidence_hashes, allow_na=False)
+            if any(d["reviewer"] != actor["identity"] for group in (decisions, criterion_decisions, source_decisions) for d in group.values()):
+                raise ValueError("Decision reviewer must match the receipt actor")
     findings = []
     for rule in rules:
         locations = []
@@ -428,24 +471,61 @@ def validate(path, snapshot=None, review_path=None, references_only=False):
                          "family": rule["family"], "source_class": rule["source_class"],
                          "observation": observation,
                          "decision": decisions.get(rule["id"])})
-    blocked = any(f["status"] == "fail" and f["severity"] != "warning" for f in findings)
-    unresolved = references_only or review_error or any(f["status"] in ("needs_review", "not_tested", "fail") for f in findings)
+    eeat = [{"criterion_id": c["id"], "dimension": c["dimension"], "title": c["title"],
+             "status": criterion_decisions.get(c["id"], {}).get("status", "needs_review"),
+             "prompt": c["review"], "profile_prompt": c[bundle["page_type"]],
+             "applies_when": c["applies_when"], "exception": c["exception"],
+             "pass_condition": c["pass"], "fail_condition": c["fail"], "unknown_condition": c["unknown"],
+             "evidence_needed": c["evidence"], "automation_limit": c["automation_limit"],
+             "sources": sorted({url for sid in c["sources"] for url in mapping["sources"][sid]["urls"]}),
+             "related_rule_ids": c["direct_rules"] + c["supporting_rules"],
+             "decision": criterion_decisions.get(c["id"])} for c in mapping["criteria"]]
+    source_findings = [{"source": url, "status": source_decisions.get(url, {}).get("status", "needs_review"),
+                        "decision": source_decisions.get(url)} for url in required_sources]
+    source_review_required = any(f["status"] != "pass" for f in source_findings)
+    blocked = (any(f["status"] == "fail" and f["severity"] != "warning" for f in findings)
+               or any(f["status"] == "fail" for f in eeat + source_findings))
+    unresolved = (source_review_required or review_error or review_purpose == "illustration"
+                  or any(f["status"] in ("needs_review", "not_tested", "fail") for f in findings + eeat))
     readiness = "blocked" if blocked else "review_required" if unresolved else "ready_for_owner_review"
-    return {"schema_version": 1, "validator_version": VERSION, "fingerprint": fingerprint,
+    return {"schema_version": 2, "validator_version": VERSION, "fingerprint": fingerprint,
             "content_sha256": sha(content), "context_sha256": context_hash,
             "stage": bundle["stage"], "page_type": bundle["page_type"], "readiness": readiness,
             "review_error": review_error, "counts": dict(Counter(f["status"] for f in findings)),
             "findings": findings, "source_coverage_complete": audit["complete_within_scope"],
             "source_verification": "references_only_not_verified" if references_only else "local_snapshot_hashes_verified",
-            "source_review_required": references_only,
+            "source_review_required": source_review_required,
+            "source_review_assurance": "operator_attestation_only" if not source_review_required else "incomplete",
+            "review_actor": actor, "review_purpose": review_purpose, "review_receipt_sha256": review_hash,
+            "reviewer_identity_verified": False, "publication_approved": False,
+            "eeat_criteria": eeat, "eeat_counts": dict(Counter(f["status"] for f in eeat)),
+            "source_reviews": source_findings,
             "review_queue": [{"family": family, "rule_ids": [f["rule_id"] for f in findings
                               if f["family"] == family and f["status"] in ("fail", "needs_review", "not_tested")]}
                              for family in sorted({f["family"] for f in findings
                              if f["status"] in ("fail", "needs_review", "not_tested")})],
             "limits": ["No publication approval or ranking score", "HTML inventory is not browser rendering",
                        "Static labels are a limited subset, not accessible-name conformance; CSS and JavaScript visibility require rendered review",
-                       "Human decisions are operator attestations, not authenticated signatures",
+                       "AI and human decisions are operator attestations, not authenticated signatures or independent calibration",
                        "No live fetching, link reachability testing or complete schema-feature validation"]}
+
+
+def review_template(report):
+    """Return an unresolved receipt scaffold; never generate approvals."""
+    def pending(key, identifier, prompt):
+        return {key: identifier, "status": "needs_review", "reviewer": "", "reviewed_at": "",
+                "reason": "", "evidence_ids": [], "review_prompt": prompt}
+    return {"schema_version": 2, "purpose": "content_review", "fingerprint": report["fingerprint"],
+            "actor": {"kind": "ai", "identity": "", "model": "not_exposed", "run_id": "",
+                      "relationship_to_author": "unknown"},
+            "decisions": [pending("rule_id", f["rule_id"], f["profile_prompt"])
+                          for f in report["findings"] if f["method"] in ("editorial", "rendered")
+                          and f["status"] == "needs_review"],
+            "criteria": [pending("criterion_id", f["criterion_id"], f["profile_prompt"])
+                         for f in report["eeat_criteria"]],
+            "sources": [pending("source", f["source"],
+                        "Read the cited sections in context. Attach capture notes and explain support or conflict; inaccessible sources remain unresolved.")
+                        for f in report["source_reviews"]]}
 
 
 def coverage(snapshot, triage_path=None):
@@ -512,6 +592,15 @@ def write_report(target, report, execute):
         lines.extend([f["rule_id"] + " | " + f["status"] + " | " + f["title"],
                       "Locations: " + ", ".join(f["locations"]), "Evidence: " + f["observed_evidence"],
                       "Action: " + f["remediation"], "Source: " + f["source"], ""])
+    lines.extend(["Review actor: " + json.dumps(report["review_actor"]),
+                  "Source review assurance: " + report["source_review_assurance"],
+                  "Publication approved: false", "", "E-E-A-T criteria"])
+    for f in report["eeat_criteria"]:
+        lines.extend([f["criterion_id"] + " | " + f["status"] + " | " + f["title"],
+                      "Decision: " + (f["decision"]["reason"] if f["decision"] else "Not assessed"), ""])
+    lines.append("Source reviews")
+    for f in report["source_reviews"]:
+        lines.append(f["status"] + " | " + f["source"])
     (target / "report.txt").write_text("\n".join(lines))
     receipt = {"schema_version": 1, "fingerprint": report["fingerprint"],
                "files": {name: sha((target / name).read_bytes()) for name in ("report.json", "report.txt")}}
@@ -523,8 +612,9 @@ def main():
     parser.add_argument("bundle", type=Path, nargs="?")
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--snapshot", type=Path)
-    mode.add_argument("--references-only", action="store_true", help="Run without a source archive; always requires source review")
+    mode.add_argument("--references-only", action="store_true", help="Run without a source archive; requires evidenced source-review attestations")
     parser.add_argument("--reviews", type=Path)
+    parser.add_argument("--review-template", action="store_true", help="Print an unresolved v2 receipt scaffold; never writes or approves")
     parser.add_argument("--coverage", action="store_true")
     parser.add_argument("--triage", type=Path, help="Optional operator adjudications for read-only coverage")
     parser.add_argument("--output", type=Path)
@@ -534,7 +624,7 @@ def main():
         if args.coverage:
             if args.references_only:
                 raise ValueError("Coverage requires a local snapshot")
-            if args.output or args.execute or args.bundle or args.reviews:
+            if args.output or args.execute or args.bundle or args.reviews or args.review_template:
                 raise ValueError("Coverage is read-only; use only --coverage and --snapshot")
             print(json.dumps(coverage(args.snapshot, args.triage), indent=2))
             return 0
@@ -542,7 +632,12 @@ def main():
             raise ValueError("--triage requires --coverage")
         if not args.bundle or (args.execute and not args.output):
             raise ValueError("Provide a bundle; --execute requires --output")
+        if args.review_template and (args.reviews or args.output or args.execute):
+            raise ValueError("Review templates are read-only scaffolds; do not combine with reviews or exports")
         result = validate(args.bundle, args.snapshot, args.reviews, args.references_only)
+        if args.review_template:
+            print(json.dumps(review_template(result), indent=2))
+            return 0
         if args.output:
             write_report(args.output, result, args.execute)
         print(json.dumps(result, indent=2))

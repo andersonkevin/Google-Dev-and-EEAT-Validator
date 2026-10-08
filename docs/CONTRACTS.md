@@ -21,28 +21,62 @@ historical accuracy or currency.
 
 ## Review Receipt
 
-Run once to obtain the current fingerprint. A separate review receipt contains:
+V2 keeps bundle schema 1 but requires review schema 2. Run once for the current
+fingerprint or use `--review-template` for an unresolved scaffold. A partial receipt:
 
 ```json
 {
+  "schema_version": 2,
+  "purpose": "content_review",
   "fingerprint": "exact current report fingerprint",
+  "actor": {
+    "kind": "ai",
+    "identity": "Operating review agent",
+    "model": "not_exposed",
+    "run_id": "review-001",
+    "relationship_to_author": "same_agent"
+  },
   "decisions": [{
     "rule_id": "CLAIM-002",
     "status": "fail",
-    "reviewer": "Actual responsible reviewer",
+    "reviewer": "Operating review agent",
     "reviewed_at": "2026-10-08",
     "reason": "Explain the precise claim and evidence conflict.",
     "evidence_ids": ["actual-evidence-id"]
-  }]
+  }],
+  "criteria": [],
+  "sources": []
 }
 ```
 
-Pass it with `--reviews PATH`. Statuses: pass, fail or not_applicable. Every
-decision requires evidence, reason, reviewer and date. Do not use this illustrative
-record as approval. Identities are operator attestations, not authenticated signatures.
+Pass it with `--reviews PATH`. Statuses are pass, fail, not_applicable or needs_review.
+Every decision requires reason, reviewer and date. Resolved decisions also require
+nonempty, distinct local evidence IDs; needs_review may have no evidence. Reviewer
+must match actor.identity. These identities are attestations, not authenticated signatures.
 
-The fingerprint binds the draft, brief, evidence, rules, engine, source mode and
-observations. Changing any of these invalidates the receipt. Existing failures
+Actor kind is ai or human. AI requires model, run_id and relationship_to_author
+(same_agent, separate_context or unknown); human uses human_review or unknown.
+Use not_exposed when the actual model name is unavailable; never invent it.
+Purpose is content_review or illustration. Illustrations cannot become ready.
+
+The decisions list accepts only editorial and rendered rules. Automatic findings
+cannot be overridden. Live observations retain their separate receipt contract.
+
+The criteria list uses criterion_id for each of the 20 map entries, with the same
+status/reviewer/reason/date/evidence fields. All start needs_review, including the
+two areas that previously lacked dedicated review coverage. Applicability is a
+reasoned reviewer decision, not inferred from related-rule passes. Conditional
+criteria can be not_applicable with evidence explaining the exception. Missing
+proof remains needs_review. Every explicit criterion failure blocks readiness.
+
+The sources list uses source for each exact URL in report.source_reviews. URL
+fragments are grouped by document, but the reviewer must inspect the cited sections.
+Only pass, fail and needs_review are accepted: a source cannot be waived with
+not_applicable. Attach actual capture/review notes as bundle evidence. Never copy
+synthetic source assertions into a real review. Source conflicts block readiness.
+
+The fingerprint binds draft, brief, evidence, rules, criterion map, engine, source
+mode and observations. Changing any invalidates the receipt. Existing failures
 cannot be waived by claiming non-applicability; automatic rules cannot be overridden
 by a human receipt. YMYL false still requires a contextual scope review.
 
@@ -56,9 +90,18 @@ by a human receipt. YMYL false still requires a contextual scope review.
 6. Applicable imported observations or human decisions supply their narrow result.
 7. Missing live evidence is not_tested; missing semantic assessment needs_review.
 
-Error/critical failures block. Warning failures and unresolved reviews require
-review. References-only source mode always requires review. No readiness state
-authorizes publication or guarantees a ranking result.
+Error/critical rule failures, criterion failures and source failures block.
+Warning failures and unresolved reviews require review. References-only may reach
+ready_for_owner_review after all required assessments, but source_verification
+remains references_only_not_verified and source_review_assurance explicitly reports
+operator_attestation_only. Even snapshot mode requires source-review decisions;
+file integrity is not interpretation. No state authorizes publication.
+
+Report schema is 2, with review_actor, review_purpose, review_receipt_sha256,
+eeat_criteria, eeat_counts and source_reviews. Counts for rules and criteria remain
+separate; they are not a score. publication_approved and reviewer_identity_verified
+are always false. V1 receipts must be replaced by fresh review, not migrated by
+editing their schema or fingerprint without reassessment.
 
 ## Optional Local Source Snapshot
 
@@ -108,20 +151,26 @@ Capture age, environment suitability and authenticity remain human responsibilit
 ## Independent Evaluation
 
 ```sh
-python3 -B tools/evaluate_validator.py /path/to/private-cases.json --snapshot /path/to/private-snapshot
+python3 -B tools/evaluate_validator.py /path/to/private-cases.json --references-only
 ```
 
 An evaluation manifest uses schema_version 1 and a nonempty cases list. Each case
 has a unique id, kind (synthetic/real), split (development/holdout), brand, actual
 labeler, labeled_at, relative bundle, bundle_sha256, validator fingerprint and
-expected rule IDs mapped to pass/fail. An optional reviews path supplies decisions.
+expected rule or criterion IDs mapped to pass/fail. Optional reviews supplies
+decisions and requires reviews_sha256 binding the exact receipt bytes.
+Optional labeler_kind is ai, human or unspecified; ai also requires labeler_model.
 Prepare expected labels independently before examining output.
 
-Results include raw confusion outcomes, precision/recall and unresolved findings.
+Results include raw confusion outcomes, precision/recall and unresolved findings,
+automatic_metrics, review_agreement_metrics and resolved_fraction. Groups separate
+kind, split, page_type, method and labeler_kind. AI review agreement is not
+independent accuracy; identity and label independence are not authenticated.
 No denominator gives null, not a claimed zero error rate. Unresolved results are
-not successes. The evaluator requires a snapshot; it has no references-only mode.
+not successes. Choose either --snapshot or --references-only, matching the fingerprint.
 Exit 0 means no mismatch/unresolved in the supplied set, 1 invalid input, 2 a mismatch
-or unresolved result. Evaluation never issues release approval.
+or unresolved result. Evaluation never issues release approval or calibration claims.
+See [CALIBRATION.md](CALIBRATION.md).
 
 ## Export Integrity
 

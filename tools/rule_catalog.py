@@ -2,9 +2,13 @@
 import json
 from pathlib import Path
 
-VERSION = "1.0.0"
+VERSION = "2.0.0"
 SEARCH = "https://developers.google.com/search/docs/"
 STYLE = "https://developers.google.com/style/"
+
+
+def criteria_map():
+    return json.loads((Path(__file__).parents[1] / "references/eeat-map.json").read_text())
 
 PROFILES = {
     "article": {
@@ -62,13 +66,13 @@ EXTRA = [
     ("CLAIM-001", "Claim ledger references present text and evidence", SEARCH + "fundamentals/creating-helpful-content#expertise-questions", "auto", "always", "error"),
     ("EVIDENCE-001", "Evidence records have provenance", SEARCH + "fundamentals/creating-helpful-content#expertise-questions", "auto", "always", "error"),
     ("LANG-001", "Document language declared", STYLE + "accessibility#general-dos-and-donts", "auto", "page", "warning"),
-    ("CLAIM-002", "Sources substantiate the claims in context", SEARCH + "fundamentals/creating-helpful-content#expertise-questions", "human", "always", "critical"),
-    ("CLAIM-003", "Ledger covers material claims and numeric outcomes", SEARCH + "fundamentals/creating-helpful-content#expertise-questions", "human", "always", "error"),
-    ("MEDIA-002", "Media rights and attribution verified", SEARCH + "essentials/spam-policies#copyright-removal-requests", "human", "media", "error"),
-    ("MEDIA-003", "Diagrams and multimedia are accurate and useful", STYLE + "accessibility#images", "human", "media", "error"),
-    ("META-004", "Title and description accurately represent the page", SEARCH + "appearance/title-link#inaccurate-title-elements", "human", "page", "error"),
+    ("CLAIM-002", "Sources substantiate the claims in context", SEARCH + "fundamentals/creating-helpful-content#expertise-questions", "editorial", "always", "critical"),
+    ("CLAIM-003", "Ledger covers material claims and numeric outcomes", SEARCH + "fundamentals/creating-helpful-content#expertise-questions", "editorial", "always", "error"),
+    ("MEDIA-002", "Media rights and attribution verified", SEARCH + "essentials/spam-policies#copyright-removal-requests", "editorial", "media", "error"),
+    ("MEDIA-003", "Diagrams and multimedia are accurate and useful", STYLE + "accessibility#images", "editorial", "media", "error"),
+    ("META-004", "Title and description accurately represent the page", SEARCH + "appearance/title-link#inaccurate-title-elements", "editorial", "page", "error"),
     ("A11Y-001", "Rendered keyboard and visual review", STYLE + "accessibility#general-dos-and-donts", "rendered", "page", "error"),
-    ("INTENT-001", "Next action serves the reader and brand brief", SEARCH + "fundamentals/creating-helpful-content#people-first", "human", "always", "error"),
+    ("INTENT-001", "Next action serves the reader and brand brief", SEARCH + "fundamentals/creating-helpful-content#people-first", "editorial", "always", "error"),
 ]
 
 
@@ -76,7 +80,7 @@ def catalog():
     base = json.loads((Path(__file__).parents[1] / "references/validator-rules.json").read_text())
     rules = []
     for row in base:
-        method = "live" if row["id"].startswith("ACCESS-") else "human"
+        method = "live" if row["id"].startswith("ACCESS-") else "editorial"
         if row["id"] == "RATER-004":
             method = "rendered"
         applies = {"SCHEMA-001": "schema", "MEDIA-001": "video_claim", "STYLE-002": "images",

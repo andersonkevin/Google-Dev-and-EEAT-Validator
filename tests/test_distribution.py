@@ -34,7 +34,9 @@ class DistributionTests(unittest.TestCase):
 
     def test_completed_editorial_receipts_do_not_remove_source_gate(self):
         report = self.public_report()
-        receipt = {"fingerprint": report["fingerprint"], "decisions": [
+        receipt = {"schema_version": 2, "purpose": "content_review",
+            "actor": {"kind": "human", "identity": "Synthetic reviewer", "relationship_to_author": "human_review"},
+            "fingerprint": report["fingerprint"], "decisions": [
             {"rule_id": f["rule_id"], "status": "pass", "reviewer": "Synthetic reviewer",
              "reason": "Synthetic adjudication", "reviewed_at": "2026-10-08", "evidence_ids": ["e1"]}
             for f in report["findings"] if f["status"] == "needs_review"]}
