@@ -1,0 +1,222 @@
+[
+  {
+    "id": "RATER-001",
+    "class": "rater_framework",
+    "source": "https://static.googleusercontent.com/media/guidelines.raterhub.com/en//searchqualityevaluatorguidelines.pdf#page=25",
+    "applies_to": "Reputation reviews, especially new businesses and small sites",
+    "check": "human_review",
+    "evidence": "Separate missing reputation information from credible negative evidence and evaluate context.",
+    "remediation": "Record what is unknown and assess other trust evidence without inventing endorsements.",
+    "do_not_infer": "No reviews or few backlinks automatically means poor quality."
+  },
+  {
+    "id": "RATER-002",
+    "class": "rater_framework",
+    "source": "https://static.googleusercontent.com/media/guidelines.raterhub.com/en//searchqualityevaluatorguidelines.pdf#page=27",
+    "applies_to": "Expertise, reputation, testimonials, and product-review claims",
+    "check": "human_review",
+    "evidence": "Distinguish self-description, independent evidence, visible demonstrations, and conflicts of interest.",
+    "remediation": "Substantiate claims and make material relationships clear.",
+    "do_not_infer": "Self-proclaimed expertise or a testimonial proves independent authority."
+  },
+  {
+    "id": "RATER-003",
+    "class": "rater_framework",
+    "source": "https://static.googleusercontent.com/media/guidelines.raterhub.com/en//searchqualityevaluatorguidelines.pdf#page=28",
+    "applies_to": "High-impact advice and first-hand accounts on YMYL topics",
+    "check": "qualified_human_review",
+    "evidence": "Identify whether the page gives specialist advice or shares safe, relevant lived experience.",
+    "remediation": "Obtain suitable expertise for advice; keep personal experience within supported bounds.",
+    "do_not_infer": "Every mention of health or money needs identical credentials, or lived experience replaces specialist advice."
+  },
+  {
+    "id": "RATER-004",
+    "class": "rater_framework",
+    "source": "https://static.googleusercontent.com/media/guidelines.raterhub.com/en//searchqualityevaluatorguidelines.pdf#page=62",
+    "applies_to": "Article and landing-page information architecture",
+    "check": "human_review_with_rendered_page",
+    "evidence": "Review whether useful main content is prominent and whether filler obstructs the primary task.",
+    "remediation": "Prioritize the answer or offer, remove irrelevant padding, and place supporting material appropriately.",
+    "do_not_infer": "All introductory or supporting material is filler, or a rater label is a ranking prediction."
+  },
+  {
+    "id": "QUALITY-001",
+    "class": "quality_guidance",
+    "source": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content#content-and-quality-questions",
+    "applies_to": "Articles and landing pages; judged against the reader task",
+    "check": "human_review",
+    "evidence": "Identify the useful original contribution and verify substantive claims against supporting material.",
+    "remediation": "Add relevant analysis, first-hand evidence, or a clearer answer to the reader task.",
+    "do_not_infer": "A citation count, long text, polished layout, or embedded video proves originality or accuracy."
+  },
+  {
+    "id": "QUALITY-002",
+    "class": "quality_guidance",
+    "source": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content#avoid",
+    "applies_to": "All page types; evaluate length against purpose",
+    "check": "human_review",
+    "evidence": "Review completeness and unnecessary padding, not a universal minimum word count.",
+    "remediation": "Fill material gaps and remove irrelevant repetition.",
+    "do_not_infer": "Google requires a word count, keyword density, or mandatory FAQ."
+  },
+  {
+    "id": "TRUST-001",
+    "class": "quality_guidance",
+    "source": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content#who-created-the-content",
+    "applies_to": "Authorship where expected; organizational responsibility on commercial pages",
+    "check": "human_review",
+    "evidence": "Verify named creators, credentials, and responsibility against supplied evidence.",
+    "remediation": "Correct unsupported credentials and identify the actual responsible person or organization.",
+    "do_not_infer": "Every landing needs an individual byline, or an author box proves expertise."
+  },
+  {
+    "id": "TRUST-002",
+    "class": "quality_guidance",
+    "source": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content#eat",
+    "applies_to": "All reviews; especially high-impact health, financial, and safety claims",
+    "check": "human_review",
+    "evidence": "Assess the experience or expertise appropriate to the claim and whether it supports trust.",
+    "remediation": "Request qualified review or narrow claims to supported experience.",
+    "do_not_infer": "E-E-A-T is a single ranking factor or an official numeric authority score."
+  },
+  {
+    "id": "FRESHNESS-001",
+    "class": "quality_guidance",
+    "source": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content#avoid",
+    "applies_to": "Pages with revised publication or modification dates",
+    "check": "human_review",
+    "evidence": "Compare the revision history with the stated update date.",
+    "remediation": "Use a date reflecting a meaningful content update, not cosmetic freshness.",
+    "do_not_infer": "A recent date alone makes information current."
+  },
+  {
+    "id": "SPAM-001",
+    "class": "spam_policy",
+    "source": "https://developers.google.com/search/docs/essentials/spam-policies#scaled-content",
+    "applies_to": "Batch production and substantially repetitive content collections",
+    "check": "human_review_with_similarity_signals",
+    "evidence": "Review intent, added value, and representative pages across the collection.",
+    "remediation": "Stop low-value expansion and revise the collection around distinct reader needs.",
+    "do_not_infer": "AI use, publishing volume, or a similarity threshold alone establishes abuse."
+  },
+  {
+    "id": "SPAM-002",
+    "class": "spam_policy",
+    "source": "https://developers.google.com/search/docs/essentials/spam-policies#doorways",
+    "applies_to": "Service, location, and keyword-variant landing-page collections",
+    "check": "human_review_with_similarity_signals",
+    "evidence": "Review distinct usefulness, destinations, and the navigable site hierarchy.",
+    "remediation": "Consolidate indistinguishable pages or develop a genuine differentiated purpose.",
+    "do_not_infer": "Shared components or design templates are doorway abuse."
+  },
+  {
+    "id": "SPAM-003",
+    "class": "spam_policy",
+    "source": "https://developers.google.com/search/docs/essentials/spam-policies#link-spam",
+    "applies_to": "Paid, sponsored, exchanged, or otherwise incentivized links",
+    "check": "hybrid_requires_relationship_evidence",
+    "evidence": "Inspect link qualification and obtain the commercial relationship context.",
+    "remediation": "Qualify applicable advertising or sponsorship links and reject ranking-manipulation arrangements.",
+    "do_not_infer": "Every outbound link is paid or every backlink is a business lead."
+  },
+  {
+    "id": "ACCESS-001",
+    "class": "technical_requirement",
+    "source": "https://developers.google.com/search/docs/essentials/technical#page-works",
+    "applies_to": "Live pages intended for Google Search",
+    "check": "live_evidence_required",
+    "evidence": "Inspect the actual HTTP response, not a local file or intended deployment configuration.",
+    "remediation": "Correct unsuccessful responses on intended indexable pages.",
+    "do_not_infer": "An HTTP 200 proves indexing, ranking, content quality, or that staging should be public."
+  },
+  {
+    "id": "ACCESS-002",
+    "class": "technical_requirement",
+    "source": "https://developers.google.com/search/docs/essentials/technical#indexable-content",
+    "applies_to": "Live pages intended for indexing, not intentionally excluded staging",
+    "check": "live_evidence_required",
+    "evidence": "Check supported indexable content and exclusion directives in served responses.",
+    "remediation": "Correct unintended exclusion only after the owner confirms publication intent.",
+    "do_not_infer": "Missing live evidence passes, or a local draft is indexed."
+  },
+  {
+    "id": "SCHEMA-001",
+    "class": "feature_guidance",
+    "source": "https://developers.google.com/search/docs/appearance/structured-data/sd-policies#content",
+    "applies_to": "Pages using structured data for a supported feature",
+    "check": "hybrid_requires_semantic_review",
+    "evidence": "Compare markup claims with visible content and the specific feature rules.",
+    "remediation": "Correct misleading, unsupported, hidden, or unrelated markup claims.",
+    "do_not_infer": "Syntactically valid JSON-LD proves truth or guarantees a rich result."
+  },
+  {
+    "id": "AI-SEARCH-001",
+    "class": "feature_guidance",
+    "source": "https://developers.google.com/search/docs/appearance/ai-features#seo-best-practices",
+    "applies_to": "Recommendations concerning Google AI Overviews and AI Mode",
+    "check": "human_review",
+    "evidence": "Check accessibility, useful textual content, internal discovery, and accurate markup.",
+    "remediation": "Prioritize established search foundations instead of unsupported AI-specific requirements.",
+    "do_not_infer": "Google requires an AI text file or special schema, or compliance guarantees AI citations."
+  },
+  {
+    "id": "MEDIA-001",
+    "class": "feature_guidance",
+    "source": "https://developers.google.com/search/docs/appearance/video#watch-page",
+    "applies_to": "Pages for which video-feature eligibility is being claimed",
+    "check": "human_review_with_live_evidence",
+    "evidence": "Establish whether watching one video is the primary page purpose and review the other video criteria.",
+    "remediation": "Distinguish complementary embeds from dedicated watch pages in the publication plan.",
+    "do_not_infer": "Adding YouTube to a blog guarantees video indexing or changes its main purpose."
+  },
+  {
+    "id": "LINKS-001",
+    "class": "feature_guidance",
+    "source": "https://developers.google.com/search/docs/crawling-indexing/links-crawlable#crawlable-links",
+    "applies_to": "Links intended for crawler discovery",
+    "check": "static_check_plus_rendered_review",
+    "evidence": "Inspect anchor elements with resolvable href values and verify rendered behavior when needed.",
+    "remediation": "Use actual navigable anchors for discovery links.",
+    "do_not_infer": "An anchor alone proves its target exists or is indexed."
+  },
+  {
+    "id": "LINKS-002",
+    "class": "feature_guidance",
+    "source": "https://developers.google.com/search/docs/crawling-indexing/links-crawlable#internal-links",
+    "applies_to": "Related pages in an editorial or commercial hub",
+    "check": "human_review_with_link_inventory",
+    "evidence": "Review whether contextual internal links help readers discover relevant next steps.",
+    "remediation": "Add relevant connections or remove irrelevant forced links.",
+    "do_not_infer": "A universal five-link quota is a Google requirement."
+  },
+  {
+    "id": "STYLE-001",
+    "class": "editorial_guidance",
+    "source": "https://developers.google.com/style/headings#hierarchy-and-structure",
+    "applies_to": "Structured articles and landing pages using the selected editorial profile",
+    "check": "static_check_plus_outline_review",
+    "evidence": "Inspect semantic heading order and whether sections form a meaningful outline.",
+    "remediation": "Correct heading structure and control visual size in the theme.",
+    "do_not_infer": "Visual font size determines heading level or a style warning proves a ranking penalty."
+  },
+  {
+    "id": "STYLE-002",
+    "class": "editorial_guidance",
+    "source": "https://developers.google.com/style/images#alt-text",
+    "applies_to": "Images and diagrams; distinguish decorative and informative uses",
+    "check": "static_check_plus_contextual_review",
+    "evidence": "Inspect alternative text and whether it conveys the image role in its surrounding content.",
+    "remediation": "Provide an appropriate textual equivalent without keyword stuffing or redundant decoration.",
+    "do_not_infer": "Every image requires nonempty alt text or a chart count proves content value."
+  },
+  {
+    "id": "STYLE-003",
+    "class": "editorial_guidance",
+    "source": "https://developers.google.com/style/tone#some-things-to-avoid-where-possible",
+    "applies_to": "Editorial clarity review adapted to the approved brand voice",
+    "check": "human_review",
+    "evidence": "Review jargon, unnecessary complexity, and assumptions about what readers find easy.",
+    "remediation": "Replace vague or patronizing wording with specific, direct explanations.",
+    "do_not_infer": "Google developer house style replaces the client voice or constitutes a ranking requirement."
+  }
+]

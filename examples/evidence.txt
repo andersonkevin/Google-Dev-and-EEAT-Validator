@@ -1,0 +1,5 @@
+SYNTHETIC FIXTURE. Not a customer result or publication approval.
+
+An illustrative export test used three input records. The resulting output had
+three records. Attachments and relationships were not tested. This supports only
+the stated record-count claim, not complete data portability.

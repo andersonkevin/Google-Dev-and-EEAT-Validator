@@ -1,0 +1,767 @@
+{
+  "schema_version": 1,
+  "mapping_version": "0.1.0",
+  "catalog_version": "1.0.0",
+  "prepared_at": "2026-10-08",
+  "status": "research_mapping_not_runtime_policy",
+  "scope": "Public research map for article and landing review. Citations are links, not bundled source text or proof of current coverage.",
+  "decision_model": "Contextual, evidence-led human assessment. No numeric E-E-A-T score, automatic certification or publication approval.",
+  "sources": {
+    "framework": {
+      "class": "quality_guidance",
+      "urls": [
+        "https://developers.google.com/search/docs/fundamentals/creating-helpful-content#eat"
+      ]
+    },
+    "purpose": {
+      "class": "quality_guidance",
+      "urls": [
+        "https://developers.google.com/search/docs/fundamentals/creating-helpful-content#people-first",
+        "https://developers.google.com/search/docs/fundamentals/creating-helpful-content#why-was-the-content-created"
+      ]
+    },
+    "quality": {
+      "class": "quality_guidance",
+      "urls": [
+        "https://developers.google.com/search/docs/fundamentals/creating-helpful-content#content-and-quality-questions",
+        "https://developers.google.com/search/docs/fundamentals/creating-helpful-content#about-main-content"
+      ]
+    },
+    "expertise": {
+      "class": "quality_guidance",
+      "urls": [
+        "https://developers.google.com/search/docs/fundamentals/creating-helpful-content#expertise-questions"
+      ]
+    },
+    "authorship": {
+      "class": "quality_guidance",
+      "urls": [
+        "https://developers.google.com/search/docs/fundamentals/creating-helpful-content#who-created-the-content"
+      ]
+    },
+    "method": {
+      "class": "quality_guidance",
+      "urls": [
+        "https://developers.google.com/search/docs/fundamentals/creating-helpful-content#how-the-content-was-created"
+      ]
+    },
+    "freshness": {
+      "class": "quality_guidance",
+      "urls": [
+        "https://developers.google.com/search/docs/fundamentals/creating-helpful-content#avoid"
+      ]
+    },
+    "independent_assessment": {
+      "class": "quality_guidance",
+      "urls": [
+        "https://developers.google.com/search/docs/fundamentals/creating-helpful-content#self-assess"
+      ]
+    },
+    "reviews": {
+      "class": "conditional_review_guidance",
+      "urls": [
+        "https://developers.google.com/search/docs/specialty/ecommerce/write-high-quality-reviews#write-high-quality-reviews"
+      ]
+    },
+    "ai_accuracy": {
+      "class": "quality_guidance",
+      "urls": [
+        "https://developers.google.com/search/docs/fundamentals/using-gen-ai-content#focus"
+      ]
+    },
+    "ai_context": {
+      "class": "quality_guidance",
+      "urls": [
+        "https://developers.google.com/search/docs/fundamentals/using-gen-ai-content#context"
+      ]
+    },
+    "schema_content": {
+      "class": "feature_policy",
+      "urls": [
+        "https://developers.google.com/search/docs/appearance/structured-data/sd-policies#content"
+      ]
+    },
+    "qrg_identity": {
+      "class": "rater_framework",
+      "urls": [
+        "https://static.googleusercontent.com/media/guidelines.raterhub.com/en//searchqualityevaluatorguidelines.pdf#page=17"
+      ]
+    },
+    "qrg_contact": {
+      "class": "rater_framework",
+      "urls": [
+        "https://static.googleusercontent.com/media/guidelines.raterhub.com/en//searchqualityevaluatorguidelines.pdf#page=18"
+      ]
+    },
+    "qrg_reputation": {
+      "class": "rater_framework",
+      "urls": [
+        "https://static.googleusercontent.com/media/guidelines.raterhub.com/en//searchqualityevaluatorguidelines.pdf#page=22"
+      ]
+    },
+    "qrg_unknown_reputation": {
+      "class": "rater_framework",
+      "urls": [
+        "https://static.googleusercontent.com/media/guidelines.raterhub.com/en//searchqualityevaluatorguidelines.pdf#page=25"
+      ]
+    },
+    "qrg_dimensions": {
+      "class": "rater_framework",
+      "urls": [
+        "https://static.googleusercontent.com/media/guidelines.raterhub.com/en//searchqualityevaluatorguidelines.pdf#page=26"
+      ]
+    },
+    "qrg_trust": {
+      "class": "rater_framework",
+      "urls": [
+        "https://static.googleusercontent.com/media/guidelines.raterhub.com/en//searchqualityevaluatorguidelines.pdf#page=27"
+      ]
+    },
+    "qrg_ymyl": {
+      "class": "rater_framework",
+      "urls": [
+        "https://static.googleusercontent.com/media/guidelines.raterhub.com/en//searchqualityevaluatorguidelines.pdf#page=28"
+      ]
+    }
+  },
+  "criteria": [
+    {
+      "id": "CONTEXT-01",
+      "dimension": "context",
+      "title": "Reader purpose and useful outcome",
+      "sources": [
+        "purpose"
+      ],
+      "google_basis": "Audience usefulness precedes search-first production.",
+      "applies_when": "Every article or landing; define the reader task before drafting.",
+      "direct_rules": [
+        "QUALITY-001",
+        "INTENT-001"
+      ],
+      "supporting_rules": [
+        "INPUT-001"
+      ],
+      "coverage": "existing_manual",
+      "evidence": [
+        "Audience and task brief",
+        "Passages or functionality that complete the task"
+      ],
+      "review": "Compare the brief with the actual answer or offer. Identify what the reader can now understand or do.",
+      "pass": "The intended reader outcome is demonstrably served.",
+      "fail": "The page promises an outcome but diverts or omits the material answer.",
+      "unknown": "Audience or intended decision is not established.",
+      "exception": "A commercial CTA is not required for an educational purpose.",
+      "automation_limit": "Brief field presence does not demonstrate usefulness.",
+      "article": "Identify the question answered and remaining necessary context.",
+      "landing": "Identify the offer, audience fit and appropriate next step, including deliberate absence of a CTA.",
+      "gap": "Reader-task satisfaction is not independently calibrated."
+    },
+    {
+      "id": "CONTEXT-02",
+      "dimension": "context",
+      "title": "Risk and expertise threshold",
+      "sources": [
+        "framework",
+        "qrg_ymyl"
+      ],
+      "google_basis": "Risk and purpose determine the expertise needed.",
+      "applies_when": "Every page receives a scope decision; heightened review applies to potentially harmful advice.",
+      "direct_rules": [
+        "RATER-003",
+        "TRUST-002"
+      ],
+      "supporting_rules": [
+        "INPUT-001"
+      ],
+      "coverage": "existing_manual",
+      "evidence": [
+        "Risk rationale tied to exact advice",
+        "Relevant specialist review where needed"
+      ],
+      "review": "Separate safe personal accounts from prescriptive advice. Document the plausible consequence of an error.",
+      "pass": "The assigned reviewer and evidence are appropriate to the advice and potential harm.",
+      "fail": "High-impact advice exceeds the substantiated competence or contradicts applicable expert knowledge.",
+      "unknown": "Risk or reviewer suitability is unresolved.",
+      "exception": "Mentioning money or health does not automatically require identical credentials.",
+      "automation_limit": "The YMYL boolean cannot exempt a page from contextual review.",
+      "article": "Review recommendations, not just the topic label.",
+      "landing": "Review promised outcomes and safety, financial or compliance claims.",
+      "gap": "No automated topic classifier or credential verification; reviewer role is an attestation."
+    },
+    {
+      "id": "EXPERIENCE-01",
+      "dimension": "experience",
+      "title": "First-hand claims are authentic",
+      "sources": [
+        "qrg_dimensions",
+        "reviews"
+      ],
+      "google_basis": "Relevant first-hand experience can support trust.",
+      "applies_when": "The copy claims use, testing, delivery, observation or personal results.",
+      "direct_rules": [
+        "QUALITY-001",
+        "RATER-002",
+        "CLAIM-002"
+      ],
+      "supporting_rules": [
+        "CLAIM-001",
+        "EVIDENCE-001"
+      ],
+      "coverage": "partial",
+      "evidence": [
+        "Dated test notes, project records or original observations",
+        "Exact claim and identity of the practitioner"
+      ],
+      "review": "Trace each first-person or organizational experience claim to an actual activity. Separate original work from cited third-party work.",
+      "pass": "The described involvement matches the supplied records.",
+      "fail": "Research summaries or invented tests are presented as first-hand work.",
+      "unknown": "The experience may be real but its supporting record is unavailable.",
+      "exception": "An attributed research explainer need not pretend to have personally tested every subject.",
+      "automation_limit": "First-person language, photographs or attached files alone cannot authenticate experience.",
+      "article": "Distinguish hands-on review from documentation-based explanation.",
+      "landing": "Distinguish work delivered from capabilities proposed.",
+      "gap": "No dedicated experience ledger or criterion-level reviewer receipt."
+    },
+    {
+      "id": "EXPERIENCE-02",
+      "dimension": "experience",
+      "title": "Testing and comparison method",
+      "sources": [
+        "reviews",
+        "method"
+      ],
+      "google_basis": "Review evidence and method make experience assessable.",
+      "applies_when": "Benchmarks, comparisons, product reviews or best-for claims rely on testing.",
+      "direct_rules": [
+        "CLAIM-002",
+        "QUALITY-001"
+      ],
+      "supporting_rules": [
+        "EVIDENCE-001"
+      ],
+      "coverage": "partial",
+      "evidence": [
+        "Test environment, product version, date and procedure",
+        "Measurements and comparison selection rationale"
+      ],
+      "review": "Check that the tested conditions support the comparison. Identify omitted conditions that could reverse the conclusion.",
+      "pass": "A reviewer can understand what was compared and why the conclusion follows.",
+      "fail": "The comparison conceals materially unequal conditions or reports tests that did not happen.",
+      "unknown": "Results are supplied without enough method to interpret them.",
+      "exception": "Conditional review guidance is not a universal requirement to run experiments for every article.",
+      "automation_limit": "Method field presence does not establish a fair test.",
+      "article": "Explain the basis of rankings and recommendations.",
+      "landing": "Explain the scope behind comparative performance claims.",
+      "gap": "No structured method contract or measurement consistency checker."
+    },
+    {
+      "id": "EXPERIENCE-03",
+      "dimension": "experience",
+      "title": "Limits and tradeoffs of experience",
+      "sources": [
+        "reviews"
+      ],
+      "google_basis": "Useful reviews explain decision factors and tradeoffs.",
+      "applies_when": "A recommendation generalizes from observed performance or a case study.",
+      "direct_rules": [
+        "CLAIM-002",
+        "QUALITY-002"
+      ],
+      "supporting_rules": [],
+      "coverage": "partial",
+      "evidence": [
+        "Conditions of the original case",
+        "Relevant drawbacks or unsuitable use cases"
+      ],
+      "review": "Compare the breadth of the recommendation with the scope actually observed.",
+      "pass": "The claim is proportionate to the tested or documented situation.",
+      "fail": "A limited result is presented as a universal outcome or unsupported guarantee.",
+      "unknown": "The bounds of the underlying case are unclear.",
+      "exception": "Do not require generic defensive disclaimers where the claim is already accurately scoped.",
+      "automation_limit": "A limitations heading cannot prove balanced analysis.",
+      "article": "Make recommendation conditions understandable.",
+      "landing": "State actual case outcomes without implying guaranteed results for every buyer.",
+      "gap": "Scope comparison remains a manual interpretation."
+    },
+    {
+      "id": "EXPERTISE-01",
+      "dimension": "expertise",
+      "title": "Topic-relevant competence",
+      "sources": [
+        "qrg_dimensions",
+        "expertise"
+      ],
+      "google_basis": "Competence must fit the subject.",
+      "applies_when": "The content relies on specialist knowledge or asserts professional capability.",
+      "direct_rules": [
+        "TRUST-001",
+        "TRUST-002"
+      ],
+      "supporting_rules": [
+        "RATER-002"
+      ],
+      "coverage": "existing_manual",
+      "evidence": [
+        "Relevant work, training, publications or demonstrated skill",
+        "Actual reviewer involvement"
+      ],
+      "review": "Relate the author's or reviewer's knowledge to this claim rather than accepting an unrelated job title.",
+      "pass": "Relevant knowledge is demonstrated and named credentials are accurate.",
+      "fail": "Credentials are false or irrelevant expertise is used to justify specialist advice.",
+      "unknown": "Competence or reviewer participation cannot be substantiated.",
+      "exception": "A degree is not mandatory for every subject; practical skill can be pertinent evidence.",
+      "automation_limit": "A biography or expert label is not verification.",
+      "article": "Check authorship and actual subject review where appropriate.",
+      "landing": "Check that team capability claims refer to available, relevant expertise.",
+      "gap": "No identity authentication or external credential lookup."
+    },
+    {
+      "id": "EXPERTISE-02",
+      "dimension": "expertise",
+      "title": "Accuracy and source interpretation",
+      "sources": [
+        "expertise",
+        "ai_accuracy"
+      ],
+      "google_basis": "Factual accuracy requires review.",
+      "applies_when": "Material factual, technical or advisory statements appear.",
+      "direct_rules": [
+        "CLAIM-002",
+        "CLAIM-003"
+      ],
+      "supporting_rules": [
+        "CLAIM-001",
+        "EVIDENCE-001"
+      ],
+      "coverage": "existing_manual",
+      "evidence": [
+        "Exact source passage or observation",
+        "Claim location and applicable date/version"
+      ],
+      "review": "Read the source in context. Check whether it supports, narrows or contradicts the actual wording.",
+      "pass": "Material statements faithfully represent the supporting information.",
+      "fail": "A source is misquoted, contradicted or used for a claim it does not establish.",
+      "unknown": "An important source is inaccessible, ambiguous or not current enough for the claim.",
+      "exception": "Not every sentence needs a citation; distinguish opinion from factual assertions.",
+      "automation_limit": "Existing evidence IDs and quote matching do not establish entailment.",
+      "article": "Check explanatory claims and recommendations.",
+      "landing": "Check benefits, capabilities and claims about customer outcomes.",
+      "gap": "No automated factual adjudication; independent semantic calibration remains open."
+    },
+    {
+      "id": "EXPERTISE-03",
+      "dimension": "expertise",
+      "title": "Demonstrated understanding",
+      "sources": [
+        "quality",
+        "reviews"
+      ],
+      "google_basis": "Depth and useful analysis matter.",
+      "applies_when": "The page explains a concept, process, comparison or service approach.",
+      "direct_rules": [
+        "QUALITY-001",
+        "QUALITY-002",
+        "STYLE-003"
+      ],
+      "supporting_rules": [],
+      "coverage": "existing_manual",
+      "evidence": [
+        "Worked explanation, reasoning or practical demonstration",
+        "Reader-task completeness review"
+      ],
+      "review": "Identify the useful explanation beyond terminology. Ask whether the intended reader can understand the decision and its conditions.",
+      "pass": "The content explains relevant mechanisms and consequences clearly.",
+      "fail": "Technical terminology substitutes for a promised explanation or conceals a material gap.",
+      "unknown": "The reviewer lacks subject knowledge to judge the explanation.",
+      "exception": "Short copy can be complete; do not impose word or diagram counts.",
+      "automation_limit": "Readability scores and vocabulary cannot certify expertise.",
+      "article": "Assess explanatory completeness for the stated question.",
+      "landing": "Assess clarity of the approach, fit and deliverables without demanding a textbook.",
+      "gap": "No calibrated reader-comprehension evaluation."
+    },
+    {
+      "id": "AUTHORITY-01",
+      "dimension": "authority",
+      "title": "Relevant external reputation",
+      "sources": [
+        "qrg_reputation"
+      ],
+      "google_basis": "Reputation is topic-specific.",
+      "applies_when": "Assessing creator/publisher standing or claims of recognition.",
+      "direct_rules": [
+        "RATER-001",
+        "RATER-002"
+      ],
+      "supporting_rules": [],
+      "coverage": "existing_manual",
+      "evidence": [
+        "Independent references, expert recognition or detailed credible reviews",
+        "Entity and subject match for each reference"
+      ],
+      "review": "Check the underlying organization or creator across sources. Separate recognition in this topic from unrelated popularity.",
+      "pass": "The assessment accurately represents the relevant evidence found, including its limits.",
+      "fail": "Recognition is fabricated or materially misrepresented.",
+      "unknown": "No reliable reputation evidence is available; this is not automatic low quality.",
+      "exception": "Traffic, domain scores and backlink volume are not substitutes for reputation evidence.",
+      "automation_limit": "The draft alone cannot establish external authority.",
+      "article": "Assess creator and publisher where appropriate.",
+      "landing": "Assess the organization and topic-specific capability claims.",
+      "gap": "No evidence independence model or entity-reputation research collector."
+    },
+    {
+      "id": "AUTHORITY-02",
+      "dimension": "authority",
+      "title": "Independence and provenance of recognition",
+      "sources": [
+        "qrg_trust",
+        "qrg_reputation"
+      ],
+      "google_basis": "Self-description differs from independent evidence.",
+      "applies_when": "Testimonials, endorsements, awards or media coverage are used as proof.",
+      "direct_rules": [
+        "RATER-002",
+        "CLAIM-002"
+      ],
+      "supporting_rules": [
+        "EVIDENCE-001"
+      ],
+      "coverage": "partial",
+      "evidence": [
+        "Original recognition record",
+        "Relationship between publisher, reviewer and subject"
+      ],
+      "review": "Trace the endorsement to its origin and classify it as owned, paid, customer-provided or independent.",
+      "pass": "Recognition is authentic and its relationship is represented honestly.",
+      "fail": "Paid or self-published promotion is presented as independent validation.",
+      "unknown": "The original source or material relationship is unclear.",
+      "exception": "A genuine customer testimonial can be useful without being an independent expert assessment.",
+      "automation_limit": "A citation link does not establish independence or authenticity.",
+      "article": "Disclose the relationship behind quoted endorsements where material.",
+      "landing": "Verify testimonials and recognition before presenting them as commercial proof.",
+      "gap": "Evidence records have no typed relationship field."
+    },
+    {
+      "id": "AUTHORITY-03",
+      "dimension": "authority",
+      "title": "Missing versus adverse reputation",
+      "sources": [
+        "qrg_unknown_reputation"
+      ],
+      "google_basis": "Absent reputation is not negative reputation.",
+      "applies_when": "A creator or small organization has limited public recognition.",
+      "direct_rules": [
+        "RATER-001"
+      ],
+      "supporting_rules": [],
+      "coverage": "existing_manual",
+      "evidence": [
+        "Scope and result of reputation research",
+        "Other pertinent evidence supporting the page"
+      ],
+      "review": "Record no evidence found separately from credible adverse evidence. Evaluate remaining page evidence in context.",
+      "pass": "The review distinguishes missing, positive and adverse evidence correctly.",
+      "fail": "The page fabricates recognition or the assessment treats absence as proof of misconduct.",
+      "unknown": "Research is insufficient to characterize the available reputation evidence.",
+      "exception": "Do not require a new site to have press coverage, backlinks or public reviews to publish.",
+      "automation_limit": "Zero records is not a quality verdict.",
+      "article": "Allow substantiated contributions by lesser-known authors.",
+      "landing": "Evaluate an emerging organization without inventing authority markers.",
+      "gap": "No criterion-level distinction between unknown authority and completed contextual review in report output."
+    },
+    {
+      "id": "TRUST-01",
+      "dimension": "trust",
+      "title": "Identity and responsibility",
+      "sources": [
+        "authorship",
+        "qrg_identity"
+      ],
+      "google_basis": "Authorship must be honest and appropriate.",
+      "applies_when": "Every page needs an appropriate responsible entity; named authorship depends on context.",
+      "direct_rules": [
+        "TRUST-001"
+      ],
+      "supporting_rules": [
+        "INPUT-001"
+      ],
+      "coverage": "existing_manual",
+      "evidence": [
+        "Verified author or organizational record",
+        "Visible attribution and relevant profile/About information"
+      ],
+      "review": "Compare visible responsibility and credentials with the actual creator, publisher or reviewer.",
+      "pass": "Responsibility is clear and identity claims are accurate.",
+      "fail": "Invented experts, false credentials or misleading authorship are used.",
+      "unknown": "The responsible entity or a claimed reviewer cannot be verified.",
+      "exception": "An organization can be the creator of a commercial landing; an individual byline is not universally required.",
+      "automation_limit": "A byline, author schema or AI-generated portrait cannot prove identity.",
+      "article": "Use accurate attribution where readers expect it.",
+      "landing": "Identify the actual organization behind the offer.",
+      "gap": "No authenticated identity checks; human verification remains necessary."
+    },
+    {
+      "id": "TRUST-02",
+      "dimension": "trust",
+      "title": "Material claims and numeric results",
+      "sources": [
+        "expertise",
+        "reviews",
+        "ai_accuracy"
+      ],
+      "google_basis": "Claims and measurements need accurate support.",
+      "applies_when": "Statistics, results, comparisons or promises could influence a decision.",
+      "direct_rules": [
+        "CLAIM-002",
+        "CLAIM-003"
+      ],
+      "supporting_rules": [
+        "CLAIM-001",
+        "EVIDENCE-001"
+      ],
+      "coverage": "partial",
+      "evidence": [
+        "Raw or approved aggregate data with period, units and denominator",
+        "Claim-to-source passage mapping"
+      ],
+      "review": "Recalculate material numbers where possible. Distinguish observation, inference, causation and future targets.",
+      "pass": "The result and its scope are supported without misleading attribution.",
+      "fail": "Fabricated numbers, incorrect calculations or unsupported causal claims remain.",
+      "unknown": "The base data or relevant measurement definition is missing.",
+      "exception": "Explicitly labeled projections are not historical outcomes and need stated assumptions.",
+      "automation_limit": "The current engine checks references, not arithmetic or causal validity.",
+      "article": "Separate reported facts from interpretation and estimates.",
+      "landing": "Keep client results distinct from guarantees or general capability statements.",
+      "gap": "No structured numeric claim checker or evidence sufficiency model."
+    },
+    {
+      "id": "TRUST-03",
+      "dimension": "trust",
+      "title": "Material conflicts and commercial context",
+      "sources": [
+        "qrg_trust",
+        "reviews"
+      ],
+      "google_basis": "Conflicts affect the interpretation of recommendations.",
+      "applies_when": "Sponsorship, affiliation, ownership or compensation could influence an endorsement.",
+      "direct_rules": [
+        "RATER-002",
+        "SPAM-003"
+      ],
+      "supporting_rules": [],
+      "coverage": "partial",
+      "evidence": [
+        "Relevant relationship record",
+        "Reader-facing explanation and link qualification where applicable"
+      ],
+      "review": "Compare the recommendation's claimed independence with actual relationships. Review link policy separately from disclosure clarity.",
+      "pass": "Material relationships are represented clearly and applicable link policy is satisfied.",
+      "fail": "A paid or owned recommendation is misleadingly presented as independent.",
+      "unknown": "The relationship cannot be determined.",
+      "exception": "A company can describe its own offer; commercial intent alone is not deception.",
+      "automation_limit": "A sponsored attribute alone does not disclose every material relationship to readers.",
+      "article": "Check review, affiliate and recommendation context.",
+      "landing": "Keep own-service positioning distinct from independent endorsements.",
+      "gap": "Disclosure adequacy is manual; no relation-aware rule applicability."
+    },
+    {
+      "id": "TRUST-04",
+      "dimension": "trust",
+      "title": "Currency and honest updates",
+      "sources": [
+        "freshness",
+        "schema_content"
+      ],
+      "google_basis": "Freshness should reflect substance and relevance.",
+      "applies_when": "Dates change or time-sensitive claims concern versions, prices, policies or capabilities.",
+      "direct_rules": [
+        "FRESHNESS-001",
+        "CLAIM-002"
+      ],
+      "supporting_rules": [
+        "EVIDENCE-001"
+      ],
+      "coverage": "partial",
+      "evidence": [
+        "Version or effective date of evidence",
+        "Meaningful revision history for updated claims"
+      ],
+      "review": "Match the claim to the relevant period. Compare displayed updates with substantive changes.",
+      "pass": "The time context and stated revisions match the evidence.",
+      "fail": "Outdated conditions are presented as current or cosmetic changes imply substantive review.",
+      "unknown": "Current applicability or the basis of an update date is unresolved.",
+      "exception": "Age alone does not make stable information inaccurate.",
+      "automation_limit": "Valid ISO syntax and recent capture dates do not prove current facts.",
+      "article": "Check version-sensitive guidance and the update history.",
+      "landing": "Check current availability, scope and offer conditions.",
+      "gap": "The updated flag alone does not discover undeclared date changes; time-sensitive claim detection remains manual."
+    },
+    {
+      "id": "TRUST-05",
+      "dimension": "trust",
+      "title": "Consistent visible copy, metadata and schema",
+      "sources": [
+        "schema_content",
+        "ai_accuracy"
+      ],
+      "google_basis": "Markup must accurately represent the page.",
+      "applies_when": "Metadata or structured data describe the content, creator, offer or results.",
+      "direct_rules": [
+        "SCHEMA-001",
+        "META-004"
+      ],
+      "supporting_rules": [
+        "JSONLD-001",
+        "META-001",
+        "META-002"
+      ],
+      "coverage": "partial",
+      "evidence": [
+        "Rendered copy and emitted metadata/schema",
+        "Evidence supporting any identities, ratings or outcomes encoded there"
+      ],
+      "review": "Compare promises in titles and descriptions and entities in schema with what readers actually see and what evidence supports.",
+      "pass": "The representations agree and do not introduce unsupported claims.",
+      "fail": "Invented ratings, credentials or misleading promises occur in markup or metadata.",
+      "unknown": "Final CMS output or the relevant feature review is unavailable.",
+      "exception": "Schema presence is not mandatory for E-E-A-T and valid JSON is not evidence of authority.",
+      "automation_limit": "Syntax passes do not establish semantic accuracy or rich-result eligibility.",
+      "article": "Check author, dates, headline and article representations after rendering.",
+      "landing": "Check organization, offer and testimonial representations after rendering.",
+      "gap": "Feature-specific schema validation and semantic comparison remain incomplete."
+    },
+    {
+      "id": "TRUST-06",
+      "dimension": "trust",
+      "title": "Appropriate accountability and user protection",
+      "sources": [
+        "qrg_contact",
+        "qrg_trust"
+      ],
+      "google_basis": "Trust needs vary with site purpose and transactions.",
+      "applies_when": "A page or connected flow collects information, handles transactions or makes support commitments.",
+      "direct_rules": [],
+      "supporting_rules": [
+        "TRUST-001",
+        "INTENT-001",
+        "A11Y-001"
+      ],
+      "coverage": "gap",
+      "evidence": [
+        "Relevant contact, service and data-handling information",
+        "Staging test record for the actual user flow using synthetic data"
+      ],
+      "review": "Identify what the user is asked to provide or rely on. Verify that the responsible party and relevant conditions are understandable.",
+      "pass": "The flow and accountability are appropriate to its purpose and stated commitments.",
+      "fail": "Material conditions are deceptive or the promised help cannot be accessed.",
+      "unknown": "The actual flow or applicable policy evidence has not been reviewed.",
+      "exception": "An educational community does not need a sales contact form or personal home address to demonstrate trust.",
+      "automation_limit": "A link or form element cannot establish operational safety, privacy compliance or support quality.",
+      "article": "Review relevant subscription or download flows without imposing lead capture.",
+      "landing": "Review the intended enquiry, transaction or community flow in context.",
+      "gap": "No dedicated contextual accountability/safety rule; requires a proposed rule and independent tests before enforcement."
+    },
+    {
+      "id": "QUALITY-01",
+      "dimension": "quality_context",
+      "title": "Original contribution rather than rewritten sources",
+      "sources": [
+        "quality",
+        "reviews"
+      ],
+      "google_basis": "Original contribution matters beyond attribution.",
+      "applies_when": "Every substantive article or landing.",
+      "direct_rules": [
+        "QUALITY-001",
+        "QUALITY-002",
+        "SPAM-001",
+        "SPAM-002"
+      ],
+      "supporting_rules": [],
+      "coverage": "partial",
+      "evidence": [
+        "Specific original contribution",
+        "Relevant source or sibling-page comparison"
+      ],
+      "review": "Name what this page adds for its reader. Distinguish shared templates from substantively interchangeable content.",
+      "pass": "The page has a useful, identifiable contribution appropriate to its purpose.",
+      "fail": "Rephrasing or page variants substitute for a promised useful contribution.",
+      "unknown": "Relevant source or sibling content is unavailable for comparison.",
+      "exception": "Shared components and AI assistance are not inherently low quality or spam.",
+      "automation_limit": "Similarity percentages and citation counts do not determine originality or abuse.",
+      "article": "Identify analysis, explanation, research or experience beyond the sources.",
+      "landing": "Identify distinct audience, problem, offer or evidence beyond sibling pages.",
+      "gap": "Cross-page evidence inventory and independent originality evaluation remain open."
+    },
+    {
+      "id": "QUALITY-02",
+      "dimension": "quality_context",
+      "title": "Honest production method and AI-assisted review",
+      "sources": [
+        "method",
+        "ai_accuracy",
+        "ai_context"
+      ],
+      "google_basis": "Production context and accuracy deserve review.",
+      "applies_when": "Production method affects reader understanding or AI substantially contributes to factual content.",
+      "direct_rules": [
+        "CLAIM-002",
+        "CLAIM-003"
+      ],
+      "supporting_rules": [
+        "TRUST-001",
+        "QUALITY-001"
+      ],
+      "coverage": "gap",
+      "evidence": [
+        "Actual production and human review record",
+        "Context disclosure where reasonably expected"
+      ],
+      "review": "Verify what research, testing and human checking actually happened. Decide whether explaining automation would help readers interpret the work.",
+      "pass": "The production account is truthful and material generated claims have been checked.",
+      "fail": "Generated content is presented as nonexistent personal testing or a fabricated human review.",
+      "unknown": "The production or fact-checking record cannot be established.",
+      "exception": "Do not mandate a blanket AI label for every editorial assistance step or apply Merchant Center rules to ordinary articles.",
+      "automation_limit": "An AI-text detector cannot establish provenance or quality.",
+      "article": "Explain relevant research/testing methods and check generated facts.",
+      "landing": "Verify generated claims and do not invent customer or staff experience.",
+      "gap": "Factual review exists, but production-method/disclosure adequacy has no dedicated rule."
+    },
+    {
+      "id": "QUALITY-03",
+      "dimension": "quality_context",
+      "title": "Accessible, usable main content",
+      "sources": [
+        "quality",
+        "qrg_trust"
+      ],
+      "google_basis": "Main content must serve its purpose.",
+      "applies_when": "Reviewing the rendered article, landing or useful media/tool content.",
+      "direct_rules": [
+        "RATER-004",
+        "A11Y-001",
+        "STYLE-002",
+        "MEDIA-003"
+      ],
+      "supporting_rules": [
+        "HTML-001",
+        "HTML-004",
+        "ANCHOR-003",
+        "IMAGE-001"
+      ],
+      "coverage": "partial",
+      "evidence": [
+        "Rendered reading and interaction review",
+        "Accessible alternatives for meaningful visuals"
+      ],
+      "review": "Read the final page and inspect relevant media or interactions. Identify obstruction, misleading visuals and omitted alternatives.",
+      "pass": "Readers can find, understand and use the main content for its intended purpose.",
+      "fail": "Obstruction, misleading media or broken essential interaction prevents that outcome.",
+      "unknown": "Rendered or interaction evidence is missing.",
+      "exception": "A video, chart, polished design or longer page is not inherently more authoritative.",
+      "automation_limit": "Markup inventory cannot certify visual usability, accessibility conformance or trust.",
+      "article": "Check the reading experience and supporting illustrations.",
+      "landing": "Check offer comprehension and the intended next action.",
+      "gap": "Rendered evidence is imported, not independently collected or comprehensively assessed."
+    }
+  ]
+}

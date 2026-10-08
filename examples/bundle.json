@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "stage": "draft",
+  "page_type": "article",
+  "content": "draft.html",
+  "brief": {
+    "audience": "Teams evaluating software",
+    "market": "US",
+    "purpose": "Explain a practical export check",
+    "intent": "Informational",
+    "next_action": "Test a representative export; no contact CTA required",
+    "responsible_party": "Synthetic example publisher",
+    "ymyl": false,
+    "updated": false,
+    "video_search_claim": false
+  },
+  "claims": [
+    {
+      "id": "record-count",
+      "quote": "Our sample export preserved three records.",
+      "evidence_ids": ["export-test"]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "export-test",
+      "file": "evidence.txt",
+      "title": "Synthetic export test",
+      "origin": "Local illustrative fixture, not a customer case",
+      "captured_at": "2026-10-08"
+    }
+  ]
+}
