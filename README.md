@@ -14,6 +14,16 @@ evidence references and decision integrity. A person retains publication approva
 
 **v2.1.0** | **Python 3.10+** | **Tool + agent skill** | **MIT**
 
+Unreleased working-tree additions: a **66-entry applicability reference** and
+opt-in **evaluation manifest 2/report 3**, separating scope, defects and uncertainty.
+Legacy evaluation and production validation contracts remain unchanged.
+No real-content corpus or independent calibration is bundled.
+[Applicability boundaries](docs/APPLICABILITY.md) / [Evaluation contract](docs/CONTRACTS.md#applicability-aware-evaluation).
+
+An optional unreleased [editorial trace audit](docs/EDITORIAL-TRACE.md) separates
+mechanical findings from operator judgments and connects claims to specific
+source notes. It preserves native readiness; annotation coverage is not accuracy.
+
 [Quick start](#quick-start) / [Review workflow](#review-workflow) /
 [E-E-A-T coverage](#e-e-a-t-with-evidence) / [Documentation](#documentation)
 
@@ -222,6 +232,7 @@ the source allowlist read-only unless archive writing is explicitly requested.
 | Measure agreement without overstating accuracy | [Calibration protocol](docs/CALIBRATION.md) |
 | Understand the E-E-A-T mapping | [Coverage and gaps](docs/EEAT.md) / [Criterion map](references/eeat-map.json) |
 | Inspect the checks and their sources | [Rule catalog](tools/rule_catalog.py) / [Source-linked interpretations](references/validator-rules.json) |
+| Decide scope before assessing a defect | [Applicability guide](docs/APPLICABILITY.md) / [66-entry matrix](references/applicability-matrix.json) |
 | Handle private content safely | [Security boundaries](SECURITY.md) |
 | Contribute or understand licensing | [Contributing](CONTRIBUTING.md) / [Third-party notices](NOTICE.md) |
 

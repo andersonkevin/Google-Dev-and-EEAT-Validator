@@ -41,6 +41,13 @@ must match. An exact 2.0.0 consumer pin is not silently compatible with 2.1.0.
 Consumers may use a complete, hash-verified distribution stored locally; keep it
 unchanged and update it from a reviewed upstream release rather than forking rules.
 
+Unreleased working-tree evaluation changes opt into manifest 2/report 3 through
+`supported_evaluation_contracts`; the legacy scalar fields remain manifest 1/report 2.
+These evaluation schemas do not alter production validation/receipt contracts.
+The [applicability reference](APPLICABILITY.md) provides scope guidance without
+installing an adapter or automatically deciding exceptions. Record the matrix and
+evaluation hashes returned by the evaluator as well as the checkout state.
+
 | Boundary | Contract |
 | --- | --- |
 | Input | Bundle schema 1; HTML article or landing; explicit draft, staging or live stage |

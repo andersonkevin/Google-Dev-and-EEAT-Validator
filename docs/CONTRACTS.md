@@ -192,7 +192,7 @@ Capture age, environment suitability and authenticity remain human responsibilit
 python3 -B tools/evaluate_validator.py /path/to/private-cases.json --references-only
 ```
 
-An evaluation manifest uses schema_version 1 and a nonempty cases list. Each case
+The legacy evaluation manifest uses schema_version 1 and a nonempty cases list. Each case
 has a unique id, kind (synthetic/real), split (development/holdout), brand, actual
 labeler, labeled_at, relative bundle, bundle_sha256, validator fingerprint and
 expected rule or criterion IDs mapped to pass/fail. Optional reviews supplies
@@ -209,12 +209,97 @@ not successes. Choose either --snapshot or --references-only, matching the finge
 Exact draft bytes cannot occur in both development and holdout, even with different
 bundle context. `dataset_summary` adds per-case coverage counts, unique draft count
 and declared-provenance warnings; it does not detect semantic leakage or authenticate
-labelers. Existing evaluation schema versions remain unchanged.
+labelers. Manifest 1 still returns report 2 with unchanged binary semantics,
+including treating an observed not_applicable as unresolved.
 Exit 0 means no mismatch/unresolved in the supplied set, 1 invalid input, 2 a mismatch
 or unresolved result. Evaluation never issues release approval or calibration claims.
 See [CALIBRATION.md](CALIBRATION.md).
 
+## Applicability-Aware Evaluation
+
+Opt in with evaluation **manifest schema 2**; the same command returns
+**evaluation report schema 3**. Production bundles remain schema 1 and production
+reports/review receipts remain schema 2. `tools/describe.py` preserves its legacy
+scalar contract fields and advertises both explicit evaluation schema pairs in
+`supported_evaluation_contracts`. No automatic manifest conversion occurs.
+
+All legacy case provenance, file/hash, mode and fingerprint requirements remain.
+Each case additionally requires a nonempty `source_family_id`, shared by an
+original and all rewrites, variants and controlled synthetic derivatives. Neither
+exact draft bytes nor a declared source family may cross development/holdout.
+Same-split variants remain allowed and counted, not independent real pages.
+Family identity is supplied metadata: dishonest or missing lineage cannot be
+detected semantically by this tool. A stale supplied receipt is invalid input in
+manifest 2, even if its current bytes are hash-bound.
+
+Each `expected` rule/criterion value is now an object, for example:
+
+```json
+{
+  "applicability": "not_applicable",
+  "status": "not_applicable",
+  "reason": "The reviewed draft has no first-hand testing claim.",
+  "evidence_ids": ["scope-review"]
+}
+```
+
+This is an illustrative label shape, not supplied evidence or an approval.
+`scope-review` must be an actual evidence ID in that case's hash-bound bundle.
+Allowed combinations:
+
+| Expected applicability | Expected status |
+| --- | --- |
+| applicable | pass, fail, needs_review, or not_tested |
+| not_applicable | not_applicable |
+| unknown | needs_review |
+
+Exactly `applicability`, `status`, `reason` and `evidence_ids` are required in a
+label. Reason must be nonempty; references must be distinct, known bundle evidence
+IDs. Resolved labels require evidence; pending labels may have an empty list.
+`not_tested` is allowed only for rendered/live checks. Reference checks do not
+establish the truth, independence or sufficiency of a label.
+
+**Observed applicability is explicitly a status proxy**, not a new production
+receipt field: pass/fail/not_tested imply applicable, not_applicable implies
+excluded, needs_review leaves scope unknown. A pending contextual review cannot
+prove its own scope. Thus an expected applicable/needs_review label can match the
+pending status while still leaving applicability unresolved. This limitation is
+reported, not silently treated as scope agreement.
+
+Report 3 provides:
+
+- Full expected/observed status confusion and applicability outcomes per label.
+- Raw counts plus `{numerator, denominator, value}` for each rate; zero denominators
+  are null. Applicability agreement uses all gold-known scope labels, not only
+  those the reviewer resolved. Unknown-scope labels have separate abstention counts.
+- Defect precision/recall explicitly marked resolved-only, alongside resolution,
+  detection across all gold failures, false passes, false defects, check-level false
+  blocks, wrong exceptions and unresolved failures. These cannot disappear into a
+  favorable binary denominator. Critical counters use existing critical rule
+  severity, not an invented new E-E-A-T importance score.
+- Correct/incorrect exclusions, unsupported certainty and wrong pending status.
+  Blocking failures on gold-excluded cases are counted separately under exceptions;
+  defect false-block rates use gold applicable/pass labels only. Correctly
+  predicting uncertainty is not a content pass.
+- Groups by kind/split/page type/method/labeler kind, per-check and per-page-type
+  summaries, exact source-family counts, per-case readiness and report hashes.
+- Matrix version/hash and evaluation-code hash. These identify evaluation policy;
+  production validation fingerprints and prior review contracts are unchanged.
+
+Exit 0 means supplied status and applicability expectations match, including
+correctly expected uncertainty; 2 means disagreement or unresolved comparison;
+1 means invalid input. Exit 0 does not mean the whole page passed: only supplied
+labels are compared, and `case_reports` retains actual production readiness.
+`independence_verified`, `release_approved` and `publication_approved` stay false;
+`calibration_status` stays not_established. Missing real/holdout/development cases
+and declared shared labeler/reviewer/model provenance remain visible warnings.
+No rates authorize release or establish real-content reliability.
+
 ## Export Integrity
+
+Optional [editorial trace annotations and layered output](EDITORIAL-TRACE.md)
+reuse bundle 1 and receipt 2 extension fields. No historical package migration,
+production schema change or new semantic verdict is introduced.
 
 Only `--output NEW_DIRECTORY --execute` writes. The parent must exist; existing
 destinations and symlink paths are rejected. report.json and report.txt are followed

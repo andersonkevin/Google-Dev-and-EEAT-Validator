@@ -1,0 +1,514 @@
+{
+  "schema_version": 1,
+  "matrix_version": "1.0.0",
+  "prepared_at": "2026-10-20",
+  "catalog_version": "2.1.0",
+  "mapping_version": "2.0.0",
+  "status": "review_reference_not_calibrated",
+  "policy": "Local interpretation of linked guidance, not Google's ranking rules. This matrix does not override validator gates or generate review decisions.",
+  "profiles": {
+    "article": "Resolve the reader's question with accurate explanation and an identifiable contribution. Do not require a sales CTA, experiments, a FAQ or a fixed length.",
+    "landing": "Explain the real purpose, audience, fit and appropriate next step. An educational landing can have no commercial CTA. Organizational responsibility can replace an individual byline.",
+    "draft": "Review supplied content and evidence. Do not infer rendered behavior, live availability, indexability or final CMS metadata.",
+    "staging": "Review emitted metadata and rendered behavior with actual evidence. Respect declared staging indexing restrictions; do not require public exposure.",
+    "live": "Require actual observations for live checks; availability does not prove indexing or ranking. Reassess changed content and evidence."
+  },
+  "rules": [
+    {
+      "id": "RATER-001",
+      "when": "Assess the creator or publisher's relevant reputation; limited recognition is not adverse evidence.",
+      "evidence": [
+        "Research scope, entity match and relevant independent records, including an honest no-results record"
+      ],
+      "exception": "Do not require public reviews, traffic or backlinks from a new organization.",
+      "limit": "A draft or domain score cannot establish external reputation."
+    },
+    {
+      "id": "RATER-002",
+      "when": "Evaluate the independence and relevance of evidence offered as authority.",
+      "evidence": [
+        "Original endorsements and material relationships between the parties"
+      ],
+      "exception": "Owned descriptions and genuine customer accounts can be useful without being independent expert proof.",
+      "limit": "Source count and citation presence do not establish independence."
+    },
+    {
+      "id": "RATER-003",
+      "when": "Every page needs a risk-scope decision, even when brief.ymyl is false.",
+      "evidence": [
+        "Actual recommendations, potential harm and topic-appropriate competence"
+      ],
+      "exception": "A mention of money or health is not automatically specialist advice; a false YMYL flag is not an exemption.",
+      "limit": "The declaration cannot classify risk or authenticate a qualified reviewer."
+    },
+    {
+      "id": "RATER-004",
+      "when": "At staging/live, assess prominence and usability of the actual rendered main content.",
+      "evidence": [
+        "Rendered reading and interaction observations for the current version"
+      ],
+      "exception": "A draft-stage exclusion is not a finding that the eventual layout is usable.",
+      "limit": "Static HTML cannot establish obstruction, layout or visual prominence."
+    },
+    {
+      "id": "QUALITY-001",
+      "when": "Every substantive article or landing needs an identifiable reader benefit.",
+      "evidence": [
+        "Specific contribution and relevant comparison with sources or sibling pages"
+      ],
+      "exception": "An article explains; a landing establishes purpose, fit and substantiated scope. They need not share a template.",
+      "limit": "Length, citations, media and polish are not originality evidence."
+    },
+    {
+      "id": "QUALITY-002",
+      "when": "Assess completeness and focus against the actual reader task.",
+      "evidence": [
+        "Brief-to-content comparison and material questions resolved or omitted"
+      ],
+      "exception": "A short landing can be complete; no universal word count, keyword density or FAQ requirement.",
+      "limit": "Counting sections cannot demonstrate satisfaction of intent."
+    },
+    {
+      "id": "TRUST-001",
+      "when": "Verify honest, context-appropriate responsibility and any identity claims.",
+      "evidence": [
+        "Actual creator, publisher or responsible organization records supporting visible attribution"
+      ],
+      "exception": "An organization can author a landing; a named individual or author box is not mandatory everywhere.",
+      "limit": "A byline, schema or portrait does not authenticate a person."
+    },
+    {
+      "id": "TRUST-002",
+      "when": "Judge trust and competence in relation to purpose, claims and risk.",
+      "evidence": [
+        "Relevant experience, technical support and ownership evidence"
+      ],
+      "exception": "Practical competence can be relevant without a formal degree.",
+      "limit": "No numeric E-E-A-T score or ranking prediction is supported."
+    },
+    {
+      "id": "FRESHNESS-001",
+      "when": "The current gate opens when brief.updated is true; also inspect undeclared time-sensitive claims contextually.",
+      "evidence": [
+        "Substantive revision history and applicable versions or effective dates"
+      ],
+      "exception": "Stable information does not require cosmetic date changes. A false flag cannot excuse an evidenced freshness failure.",
+      "limit": "The flag cannot discover undisclosed updates; CLAIM-002 and TRUST-04 still require contextual review."
+    },
+    {
+      "id": "SPAM-001",
+      "when": "Assess suspected scaled content against its value and production purpose.",
+      "evidence": [
+        "Relevant collection, production context and substantive contribution comparisons"
+      ],
+      "exception": "AI use, volume and shared templates do not alone establish scaled content abuse.",
+      "limit": "One page and a similarity score cannot establish collection-level abuse; missing comparison remains unresolved."
+    },
+    {
+      "id": "SPAM-002",
+      "when": "Review suspected doorway intent and distinct utility across related pages.",
+      "evidence": [
+        "Sibling-page inventory, destinations, hierarchy and audience differences"
+      ],
+      "exception": "Reusable components and design templates are not themselves doorway abuse.",
+      "limit": "No collection-wide conclusion from a single isolated draft."
+    },
+    {
+      "id": "SPAM-003",
+      "when": "Review incentives and link qualification when links or endorsements could be promotional.",
+      "evidence": [
+        "Link purpose, compensation context and actual qualification attributes"
+      ],
+      "exception": "Not all outbound links are sponsored; a documented absence of relevant links can support a contextual exception.",
+      "limit": "Link volume cannot prove paid placement or qualified demand."
+    },
+    {
+      "id": "ACCESS-001",
+      "when": "Live stage only: verify the actual response for the intended URL.",
+      "evidence": [
+        "Current imported HTTP/browser observation bound to content and context"
+      ],
+      "exception": "Draft/staging exclusion does not establish availability. Do not expose staging to satisfy this check.",
+      "limit": "HTTP 200 alone cannot establish indexing, rankings or content quality."
+    },
+    {
+      "id": "ACCESS-002",
+      "when": "Live stage only: compare accessibility and indexing restrictions with declared intent.",
+      "evidence": [
+        "Current response, robots/indexing observations and declared URL intent"
+      ],
+      "exception": "An intentional restriction is evaluated against its purpose, not treated as permission to expose private content.",
+      "limit": "No live evidence means not_tested, not pass or not_applicable."
+    },
+    {
+      "id": "SCHEMA-001",
+      "when": "JSON-LD, microdata or supported RDFa markers occur in the supplied content.",
+      "evidence": [
+        "Emitted markup, corresponding visible content and feature-specific policy support"
+      ],
+      "exception": "Schema is not universally required; absent markup can exclude this rule but cannot hide an evidenced failure.",
+      "limit": "Valid syntax is not truth, complete feature validation or rich-result eligibility."
+    },
+    {
+      "id": "AI-SEARCH-001",
+      "when": "Review claimed readiness for Google AI search against ordinary supported search guidance.",
+      "evidence": [
+        "Actual claims and applicable Search Central guidance, plus stage-appropriate technical evidence"
+      ],
+      "exception": "Do not invent a special AI file, schema requirement or guaranteed AI citation.",
+      "limit": "Local review cannot establish inclusion in AI results."
+    },
+    {
+      "id": "MEDIA-001",
+      "when": "The brief claims video-search eligibility; examine whether the intended page is a relevant watch page.",
+      "evidence": [
+        "Eligibility claim, page purpose, video placement and current rendered/live evidence where needed"
+      ],
+      "exception": "An embedded supporting video is not automatically a watch-page or video-indexing claim.",
+      "limit": "The flag may miss undeclared promises; an explicit evidenced failure still survives a scope conflict."
+    },
+    {
+      "id": "LINKS-001",
+      "when": "Review navigation destinations and interaction relevant to the reader's task.",
+      "evidence": [
+        "Actual anchors, intended targets and reachability or interaction evidence when claimed"
+      ],
+      "exception": "A page with no relevant navigation may justify an evidenced contextual exception; syntax alone cannot verify a target.",
+      "limit": "Static parsing does not visit destinations or establish indexing."
+    },
+    {
+      "id": "LINKS-002",
+      "when": "Assess internal links for contextual usefulness and discovery.",
+      "evidence": [
+        "Relevant content inventory, actual link context and destination purpose"
+      ],
+      "exception": "No universal link quota; an absence of useful related material can justify no additional internal links.",
+      "limit": "Counting anchors does not establish relevance or authority transfer."
+    },
+    {
+      "id": "STYLE-001",
+      "when": "Assess heading meaning and hierarchy for the actual reading structure.",
+      "evidence": [
+        "Heading outline and the content each heading introduces"
+      ],
+      "exception": "Developer house style does not dictate landing-page rhetoric; logical structure is distinct from visual size.",
+      "limit": "Heading presence is not comprehension or a ranking signal measurement."
+    },
+    {
+      "id": "STYLE-002",
+      "when": "Images occur and need context-appropriate alternatives or explanation.",
+      "evidence": [
+        "Actual image purpose, surrounding content and alternative text or equivalent explanation"
+      ],
+      "exception": "Decorative images may have empty alt; complex charts may need a nearby explanation rather than oversized alt.",
+      "limit": "Alt presence cannot establish accuracy, usefulness or full accessibility."
+    },
+    {
+      "id": "STYLE-003",
+      "when": "Assess clarity and tone using the actual audience and approved brand voice.",
+      "evidence": [
+        "Brand brief, representative passages and concrete comprehension or repetition defects"
+      ],
+      "exception": "Google developer-documentation style is contextual advice, not a universal marketing voice or prohibited-word list.",
+      "limit": "A style disagreement alone is not evidence of a ranking penalty."
+    },
+    {
+      "id": "INPUT-001",
+      "when": "Every bundle must supply the local contract's explicit brief fields.",
+      "evidence": [
+        "Bundle fields, types and scope declarations"
+      ],
+      "exception": "No receipt can waive an automatic failure; optional commercial CTA absence should be documented, not fabricated.",
+      "limit": "Field completeness does not verify business facts or a useful purpose."
+    },
+    {
+      "id": "HTML-001",
+      "when": "Every review HTML document includes its intended visible main h1.",
+      "evidence": [
+        "Supplied HTML and intended main title"
+      ],
+      "exception": "This is a local review-input convention, not Google's universal one-h1 ranking requirement.",
+      "limit": "Static presence does not establish final CMS rendering."
+    },
+    {
+      "id": "HTML-002",
+      "when": "Check headings present in every supplied document for nonempty names.",
+      "evidence": [
+        "Heading markup and accessible text recognized by the parser"
+      ],
+      "exception": "No automatic-failure waiver; repair empty structure instead of styling around it.",
+      "limit": "A named heading can still be misleading; semantic review remains separate."
+    },
+    {
+      "id": "HTML-003",
+      "when": "Check the supplied heading sequence for skipped levels under local policy.",
+      "evidence": [
+        "Actual heading sequence"
+      ],
+      "exception": "Severity remains warning; a local sequence convention is not a Google ranking rule.",
+      "limit": "The heuristic cannot establish the best editorial structure."
+    },
+    {
+      "id": "HTML-004",
+      "when": "Every draft must contain readable substantive text rather than an empty shell.",
+      "evidence": [
+        "Visible text recognized in the supplied HTML"
+      ],
+      "exception": "JavaScript that might render later is not supplied review content.",
+      "limit": "Text existence does not establish indexability, accuracy or usefulness."
+    },
+    {
+      "id": "IMAGE-001",
+      "when": "img elements occur in the supplied document.",
+      "evidence": [
+        "Image markup and presence of alt attributes"
+      ],
+      "exception": "Empty alt is valid for decorative images; absence of img excludes this narrow check.",
+      "limit": "Does not classify decoration, check image loading or judge alt quality."
+    },
+    {
+      "id": "ANCHOR-001",
+      "when": "Anchor elements occur; check navigation href syntax under local policy.",
+      "evidence": [
+        "Raw anchor attributes"
+      ],
+      "exception": "Use buttons for actions; no receipt can excuse invalid static navigation. Hidden anchors are still inspected.",
+      "limit": "A syntactically usable href does not establish reachability or safety."
+    },
+    {
+      "id": "ANCHOR-002",
+      "when": "Anchors occur; inspect local fragment targets where the narrow check recognizes them.",
+      "evidence": [
+        "Fragment hrefs and target IDs in the supplied HTML"
+      ],
+      "exception": "No local-fragment defect can be claimed when no local fragment is tested; hidden anchors remain inspected.",
+      "limit": "Does not resolve script-generated or remote document targets."
+    },
+    {
+      "id": "ANCHOR-003",
+      "when": "Exposed navigation anchors need a name; HTML-hidden ancestors are excluded from this static name check.",
+      "evidence": [
+        "Actual exposed markup, recognized name sources and activated-state evidence separately"
+      ],
+      "exception": "HTML-hidden exclusion is narrow; aria-hidden alone does not excuse a focusable unnamed link.",
+      "limit": "Does not implement complete accessible-name computation, CSS visibility or browser interaction."
+    },
+    {
+      "id": "JSONLD-001",
+      "when": "application/ld+json blocks occur.",
+      "evidence": [
+        "Exact JSON-LD text, duplicate-key and root-type parsing results"
+      ],
+      "exception": "No JSON-LD means no syntax check, not a demand to add schema.",
+      "limit": "Does not validate semantic truth, microdata or feature eligibility."
+    },
+    {
+      "id": "META-001",
+      "when": "Staging/live page output must contain one nonempty title under local policy.",
+      "evidence": [
+        "Actual head output for the named version and stage"
+      ],
+      "exception": "Draft exclusion does not approve future CMS metadata.",
+      "limit": "Presence and count do not prove title accuracy or Google title selection."
+    },
+    {
+      "id": "META-002",
+      "when": "Staging/live page output needs a nonempty description under local policy.",
+      "evidence": [
+        "Emitted description metadata"
+      ],
+      "exception": "Warning severity remains unchanged; this local requirement is not a guarantee of Google's snippet.",
+      "limit": "Presence does not establish relevance or snippet use."
+    },
+    {
+      "id": "META-003",
+      "when": "Staging/live emitted canonical must match declared intent.",
+      "evidence": [
+        "Brief canonical and emitted canonical elements"
+      ],
+      "exception": "Drafts need not pretend to have a deployed canonical; known conflicts are not waived by a flag.",
+      "limit": "Matching markup cannot prove Google's chosen canonical."
+    },
+    {
+      "id": "ROBOTS-001",
+      "when": "Staging/live meta directives must agree with explicit indexing intent.",
+      "evidence": [
+        "Emitted robots meta directives and brief indexing declaration"
+      ],
+      "exception": "A staging noindex can be intentional; do not force every stage to be indexable.",
+      "limit": "Does not fetch HTTP headers, robots.txt or indexing status."
+    },
+    {
+      "id": "CLAIM-001",
+      "when": "Every bundle's claim ledger must reference actual draft quotes and known evidence IDs.",
+      "evidence": [
+        "Exact normalized quotations, ledger and evidence references"
+      ],
+      "exception": "An empty ledger is not proof that no material claims were omitted; CLAIM-003 reviews completeness.",
+      "limit": "Reference integrity is not factual support or causal validity."
+    },
+    {
+      "id": "EVIDENCE-001",
+      "when": "Every bundle's evidence records must have the required provenance and available files.",
+      "evidence": [
+        "Evidence identifiers, files, origin, title and capture dates"
+      ],
+      "exception": "No invented evidence to satisfy required fields; incomplete records remain defects.",
+      "limit": "File existence and ISO dates do not authenticate evidence or establish currency."
+    },
+    {
+      "id": "LANG-001",
+      "when": "Staging/live page output needs an html language declaration under local policy.",
+      "evidence": [
+        "Emitted html language attribute"
+      ],
+      "exception": "Draft exclusion does not certify deployed accessibility; warning severity remains unchanged.",
+      "limit": "Does not verify language accuracy or full localization."
+    },
+    {
+      "id": "CLAIM-002",
+      "when": "Review whether material claims are actually supported in context.",
+      "evidence": [
+        "Source passages, contradictions, relevant dates and the exact claim scope"
+      ],
+      "exception": "Opinions and clearly labeled projections differ from historical outcomes; assumptions still need support.",
+      "limit": "The agent must assess entailment; neither attached files nor existing IDs prove truth."
+    },
+    {
+      "id": "CLAIM-003",
+      "when": "Compare the complete copy with its material claim ledger, especially numbers and promises.",
+      "evidence": [
+        "All decision-relevant claims, measurement definitions and ledger mapping"
+      ],
+      "exception": "Not every sentence needs a citation, but an empty ledger cannot exempt numeric results or guarantees.",
+      "limit": "No automated discovery of every unsupported claim is implemented."
+    },
+    {
+      "id": "MEDIA-002",
+      "when": "Images, video, audio or iframes occur; review rights and relevant attribution.",
+      "evidence": [
+        "Licenses, permissions, ownership or applicable use basis for actual assets"
+      ],
+      "exception": "No detected media excludes this gate, not an evidenced rights failure elsewhere in the supplied review.",
+      "limit": "Markup cannot establish licensing or legal permission."
+    },
+    {
+      "id": "MEDIA-003",
+      "when": "Images, video, audio or iframes occur; assess their accuracy and explanatory role.",
+      "evidence": [
+        "Actual rendered assets, data sources and surrounding explanation"
+      ],
+      "exception": "Media is optional; decorative assets need not teach, and their presence does not establish authority.",
+      "limit": "No pixel, video or diagram-content analysis is performed by the CLI."
+    },
+    {
+      "id": "META-004",
+      "when": "Staging/live title and description must accurately represent the visible page.",
+      "evidence": [
+        "Emitted metadata, actual copy and support for promises"
+      ],
+      "exception": "A draft-stage exclusion leaves final metadata review outstanding for deployment.",
+      "limit": "Static syntax checks cannot establish semantic consistency."
+    },
+    {
+      "id": "A11Y-001",
+      "when": "Staging/live needs actual keyboard and visual review for relevant reading and interactions.",
+      "evidence": [
+        "Current rendered keyboard, responsive-layout and interaction observations"
+      ],
+      "exception": "A draft exclusion is not accessibility conformance; intentional no-CTA education does not require a form.",
+      "limit": "No browser capture or comprehensive conformance audit is executed."
+    },
+    {
+      "id": "INTENT-001",
+      "when": "Every page's outcome and next action must fit its purpose, audience and brand.",
+      "evidence": [
+        "Brief, actual copy and intended reader outcome or action"
+      ],
+      "exception": "Education/community pages can intentionally omit contact or lead capture; do not invent an offer or form.",
+      "limit": "CTA presence cannot demonstrate persuasion, conversion or reader satisfaction."
+    }
+  ],
+  "criteria": [
+    {
+      "id": "CONTEXT-01",
+      "not_applicable_when": "No general exemption: every substantive page needs a purpose assessment."
+    },
+    {
+      "id": "CONTEXT-02",
+      "not_applicable_when": "No exemption from risk-scope assessment; low risk can support a pass, not a skipped scope review."
+    },
+    {
+      "id": "EXPERIENCE-01",
+      "not_applicable_when": "A documented content review finds no claimed first-hand use, delivery, testing or personal result."
+    },
+    {
+      "id": "EXPERIENCE-02",
+      "not_applicable_when": "No claim or recommendation relies on testing, benchmarking or comparative evaluation; record the actual basis used."
+    },
+    {
+      "id": "EXPERIENCE-03",
+      "not_applicable_when": "No recommendation generalizes from observations or case outcomes; missing limits on a real generalization are not an exception."
+    },
+    {
+      "id": "EXPERTISE-01",
+      "not_applicable_when": "The scoped content neither relies on specialist competence nor claims professional capability; risk assessment still applies."
+    },
+    {
+      "id": "EXPERTISE-02",
+      "not_applicable_when": "No material factual, technical or advisory statement occurs, as evidenced by a complete content review."
+    },
+    {
+      "id": "EXPERTISE-03",
+      "not_applicable_when": "The page makes no conceptual, process, comparison or service explanation; a short explanation is still in scope."
+    },
+    {
+      "id": "AUTHORITY-01",
+      "not_applicable_when": "A justified scope decision excludes a reputation assessment; missing recognition alone is not a negative result or an exemption."
+    },
+    {
+      "id": "AUTHORITY-02",
+      "not_applicable_when": "No testimonial, endorsement, award or media recognition is presented as proof."
+    },
+    {
+      "id": "AUTHORITY-03",
+      "not_applicable_when": "The distinction is not relevant after documented reputation review; incomplete research remains unknown, not an exception."
+    },
+    {
+      "id": "TRUST-01",
+      "not_applicable_when": "No general exemption from honest responsibility; organizational attribution can satisfy the criterion."
+    },
+    {
+      "id": "TRUST-02",
+      "not_applicable_when": "No decision-relevant statistics, results, comparisons or promises appear after review of the whole copy."
+    },
+    {
+      "id": "TRUST-03",
+      "not_applicable_when": "No material endorsement, recommendation or relationship can affect interpretation; ordinary own-offer positioning is not automatically deceptive."
+    },
+    {
+      "id": "TRUST-04",
+      "not_applicable_when": "No update representation or time-sensitive assertion requires a currency decision; age alone is not a defect."
+    },
+    {
+      "id": "TRUST-05",
+      "not_applicable_when": "The review artifact has no relevant metadata or schema and final output is outside the named scope; do not claim final-output consistency."
+    },
+    {
+      "id": "TRUST-06",
+      "not_applicable_when": "No connected data-collection, transaction or support flow is promised or used; an educational page need not add one."
+    },
+    {
+      "id": "QUALITY-01",
+      "not_applicable_when": "No general exemption: every substantive page needs an identifiable useful contribution."
+    },
+    {
+      "id": "QUALITY-02",
+      "not_applicable_when": "Production method cannot materially affect interpretation and no unverified research, testing or review account is asserted; do not infer this from an AI detector."
+    },
+    {
+      "id": "QUALITY-03",
+      "not_applicable_when": "Only final rendered assessment is outside a draft's explicit scope; missing rendered evidence at staging/live remains unresolved."
+    }
+  ]
+}
