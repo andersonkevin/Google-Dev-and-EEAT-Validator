@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Update CI to SHA-pinned checkout v7.0.1 and setup-python v7.0.0 on Node 24;
+  preserve the test matrix, read-only permissions and disabled credential persistence.
 - Add a read-only editorial trace audit with compatible per-source/claim and
   passage-level decision annotations, explicit assurance layers and role-based
   next actions. Preserve native reports, gates and exit codes; metadata coverage

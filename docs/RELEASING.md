@@ -20,6 +20,13 @@ Python 3.13. Actions are commit-pinned, permissions are read-only, checkout does
 not persist credentials, and no project dependencies are installed. CI downloads
 its action/runtime infrastructure. Do not infer Windows qualification from this matrix.
 
+CI pins [checkout v7.0.1](https://github.com/actions/checkout/releases/tag/v7.0.1)
+and [setup-python v7.0.0](https://github.com/actions/setup-python/releases/tag/v7.0.0)
+to full commit SHAs. Both use Node 24 and require Actions Runner 2.327.1 or later;
+the workflow uses GitHub-hosted runners. Verify release tags and runtime/input
+compatibility in the upstream repositories before updating these pins. Keep the
+read-only permissions, disabled credential persistence and existing checks intact.
+
 ## Package
 
 ```sh
