@@ -26,6 +26,7 @@ def evaluate(manifest_path, snapshot=None, references_only=False):
     if not isinstance(cases, list) or not cases:
         raise ValueError("Evaluation requires pre-labeled cases")
     rows, seen = [], set()
+    content_splits, dataset_cases, warnings = {}, [], []
     for case in cases:
         if not isinstance(case, dict) or not nonempty(case.get("id")) or case["id"] in seen:
             raise ValueError("Invalid or duplicate evaluation case")
@@ -55,6 +56,25 @@ def evaluate(manifest_path, snapshot=None, references_only=False):
         report = validate(bundle_path, snapshot, review_path, references_only)
         if case.get("fingerprint") != report["fingerprint"]:
             raise ValueError("Evaluation fingerprint changed; preserve labels and explicitly rebaseline")
+        content_hash = report["content_sha256"]
+        previous = content_splits.get(content_hash)
+        if previous and previous["split"] != case["split"]:
+            raise ValueError("Identical draft content crosses development/holdout: "
+                             + previous["case_id"] + " and " + case["id"])
+        content_splits[content_hash] = {"split": case["split"], "case_id": case["id"]}
+        dataset_cases.append({key: case[key] for key in ("id", "kind", "split", "brand")}
+                             | {"page_type": report["page_type"]})
+        actor = report["review_actor"] or {}
+        if labeler_kind == "unspecified":
+            warnings.append({"case_id": case["id"], "code": "labeler_kind_unspecified"})
+        if actor.get("identity") == case["labeler"]:
+            warnings.append({"case_id": case["id"], "code": "labeler_is_reviewer"})
+        if (labeler_kind == actor.get("kind") == "ai"
+                and case.get("labeler_model") not in ("not_exposed", "unknown")
+                and case.get("labeler_model") == actor.get("model")):
+            warnings.append({"case_id": case["id"], "code": "labeler_and_reviewer_same_model"})
+        if actor.get("relationship_to_author") == "same_agent":
+            warnings.append({"case_id": case["id"], "code": "reviewer_is_author"})
         findings = {f["rule_id"]: f for f in report["findings"]}
         findings.update({f["criterion_id"]: f | {"method": "editorial", "family": f["dimension"]}
                          for f in report["eeat_criteria"]})
@@ -77,10 +97,22 @@ def evaluate(manifest_path, snapshot=None, references_only=False):
     for key in sorted({(r["kind"], r["split"], r["page_type"], r["method"], r["labeler_kind"]) for r in rows}):
         selected = [r for r in rows if (r["kind"], r["split"], r["page_type"], r["method"], r["labeler_kind"]) == key]
         groups.append(dict(zip(("kind", "split", "page_type", "method", "labeler_kind"), key)) | summarize(selected))
+    for field, value, code in (("split", "holdout", "no_holdout_cases"),
+                               ("split", "development", "no_development_cases"),
+                               ("kind", "real", "no_real_content_cases")):
+        if not any(c[field] == value for c in dataset_cases):
+            warnings.append({"case_id": None, "code": code})
     return {"schema_version": 2, "manifest_sha256": sha(raw), "case_count": len(cases),
             **summarize(rows), "results": rows, "groups": groups,
             "automatic_metrics": summarize([r for r in rows if r["method"] == "auto"]),
             "review_agreement_metrics": summarize([r for r in rows if r["method"] != "auto"]),
+            "dataset_summary": {
+                "counts": {field: dict(Counter(c[field] for c in dataset_cases))
+                           for field in ("kind", "split", "brand", "page_type")},
+                "unique_draft_count": len(content_splits),
+                "warnings": warnings,
+                "leakage_check": "exact_draft_bytes_only",
+            },
             "independence_verified": False, "calibration_status": "not_established",
             "release_approved": False,
             "limits": "Labels and reviewer identity are attestations. Review agreement is not independent model accuracy. Unresolved cases are excluded from binary metrics; inspect resolved_fraction. Synthetic cases do not establish real-content calibration. No release threshold is implied."}

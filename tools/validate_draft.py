@@ -65,6 +65,7 @@ class Page(HTMLParser):
     def handle_starttag(self, tag, attrs):
         node = {"tag": tag, "attrs": {key: value or "" for key, value in attrs}, "text": "", "line": self.getpos()[0], "children": []}
         node["inert"] = tag == "template" or any(p.get("inert") for p in self.stack)
+        node["html_hidden"] = "hidden" in node["attrs"] or any(p["html_hidden"] for p in self.stack)
         node["hidden"] = "hidden" in node["attrs"] or node["attrs"].get("aria-hidden", "").lower() == "true" or any(p["hidden"] for p in self.stack)
         if self.stack:
             self.stack[-1]["children"].append(node)
@@ -226,8 +227,11 @@ def automatic(rid, bundle, page):
         ids = {n["attrs"].get("id") for n in page.nodes} | {n["attrs"].get("name") for n in page.tags("a")}
         bad = [n for n in page.tags("a") if n["attrs"].get("href", "").startswith("#") and len(n["attrs"]["href"]) > 1 and unquote(n["attrs"]["href"][1:]) not in ids]
     elif rid == "ANCHOR-003":
+        # HTML-hidden states need rendered inspection after activation. ARIA hiding
+        # alone does not remove a focusable link from the current interaction state.
         # Decorative duplicate links may be explicitly removed from both access paths.
         bad = [n for n in page.tags("a") if "href" in n["attrs"]
+               and not n["html_hidden"]
                and not (n["attrs"].get("aria-hidden", "").lower() == "true" and n["attrs"].get("tabindex") == "-1")
                and not page.label(n)]
     elif rid == "JSONLD-001":
@@ -454,6 +458,11 @@ def validate(path, snapshot=None, review_path=None, references_only=False):
             locations = automatic(rule["id"], bundle, page)
             status = "fail" if locations else "pass"
             observed = "Static check only; no rendered or live behavior inferred."
+            if rule["id"] == "ANCHOR-003":
+                excluded = sum(n["html_hidden"] for n in page.tags("a") if "href" in n["attrs"])
+                if excluded:
+                    observed += (f" Excluded {excluded} link(s) within HTML hidden content; "
+                                 "inspect their activated states and CSS visibility in rendered review.")
         elif observation:
             status, observed = observation["status"], observation["reason"]
         elif rule["method"] == "live":
@@ -526,6 +535,58 @@ def review_template(report):
             "sources": [pending("source", f["source"],
                         "Read the cited sections in context. Attach capture notes and explain support or conflict; inaccessible sources remain unresolved.")
                         for f in report["source_reviews"]]}
+
+
+def review_plan(report):
+    """Group remaining work and source sections without making review decisions."""
+    pending = {"fail", "needs_review", "not_tested"}
+
+    def fields(item, keys):
+        return {key: item[key] for key in keys}
+
+    source_tasks = []
+    for source in report["source_reviews"]:
+        url = source["source"]
+        rules = [f for f in report["findings"] if urldefrag(f["source"])[0] == url]
+        criteria = [c for c in report["eeat_criteria"]
+                    if any(urldefrag(ref)[0] == url for ref in c["sources"])]
+        sections = {f["source"] for f in rules} | {
+            ref for c in criteria for ref in c["sources"] if urldefrag(ref)[0] == url}
+        source_tasks.append({
+            "source": url, "status": source["status"], "required": True,
+            "decision": source["decision"],
+            "sections": sorted(sections or {url}),
+            "rule_ids": [f["rule_id"] for f in rules],
+            "pending_rule_ids": [f["rule_id"] for f in rules if f["status"] in pending],
+            "criterion_ids": [c["criterion_id"] for c in criteria],
+            "pending_criterion_ids": [c["criterion_id"] for c in criteria if c["status"] in pending],
+        })
+    return {
+        "schema_version": 1, "kind": "review_plan",
+        **fields(report, ("validator_version", "fingerprint", "stage", "page_type", "readiness",
+                          "review_error", "source_verification", "source_review_assurance")),
+        "publication_approved": False,
+        "mechanical_failures": [
+            fields(f, ("rule_id", "title", "severity", "status", "locations", "observed_evidence", "remediation"))
+            for f in report["findings"] if f["method"] == "auto" and f["status"] == "fail"],
+        "review_tasks": [
+            fields(f, ("rule_id", "title", "method", "severity", "status", "profile_prompt",
+                       "observed_evidence", "scope_conflict", "source", "remediation"))
+            for f in report["findings"] if f["method"] != "auto" and f["status"] in pending],
+        "criterion_tasks": [
+            fields(c, ("criterion_id", "dimension", "title", "status", "profile_prompt",
+                       "applies_when", "exception", "evidence_needed", "related_rule_ids", "sources", "decision"))
+            for c in report["eeat_criteria"] if c["status"] in pending],
+        "sources": source_tasks,
+        "static_scope_notes": [
+            {"rule_id": f["rule_id"], "note": f["observed_evidence"]}
+            for f in report["findings"] if f["method"] == "auto" and f["rule_id"] == "ANCHOR-003"],
+        "limits": report["limits"] + [
+            "Plan only; no sources fetched, evidence collected or decisions generated",
+            "All catalog source gates remain required, including documents linked only to inactive rules",
+            "Existing capture notes require currency and relevance review; decisions do not transfer between fingerprints",
+        ],
+    }
 
 
 def coverage(snapshot, triage_path=None):
@@ -615,6 +676,7 @@ def main():
     mode.add_argument("--references-only", action="store_true", help="Run without a source archive; requires evidenced source-review attestations")
     parser.add_argument("--reviews", type=Path)
     parser.add_argument("--review-template", action="store_true", help="Print an unresolved v2 receipt scaffold; never writes or approves")
+    parser.add_argument("--review-plan", action="store_true", help="Print remaining work and grouped source sections; read-only, normal readiness exit codes")
     parser.add_argument("--coverage", action="store_true")
     parser.add_argument("--triage", type=Path, help="Optional operator adjudications for read-only coverage")
     parser.add_argument("--output", type=Path)
@@ -624,7 +686,7 @@ def main():
         if args.coverage:
             if args.references_only:
                 raise ValueError("Coverage requires a local snapshot")
-            if args.output or args.execute or args.bundle or args.reviews or args.review_template:
+            if args.output or args.execute or args.bundle or args.reviews or args.review_template or args.review_plan:
                 raise ValueError("Coverage is read-only; use only --coverage and --snapshot")
             print(json.dumps(coverage(args.snapshot, args.triage), indent=2))
             return 0
@@ -632,12 +694,17 @@ def main():
             raise ValueError("--triage requires --coverage")
         if not args.bundle or (args.execute and not args.output):
             raise ValueError("Provide a bundle; --execute requires --output")
+        if args.review_plan and (args.review_template or args.output or args.execute):
+            raise ValueError("Review plans are read-only; do not combine with templates or exports")
         if args.review_template and (args.reviews or args.output or args.execute):
             raise ValueError("Review templates are read-only scaffolds; do not combine with reviews or exports")
         result = validate(args.bundle, args.snapshot, args.reviews, args.references_only)
         if args.review_template:
             print(json.dumps(review_template(result), indent=2))
             return 0
+        if args.review_plan:
+            print(json.dumps(review_plan(result), indent=2))
+            return {"ready_for_owner_review": 0, "review_required": 2, "blocked": 3}[result["readiness"]]
         if args.output:
             write_report(args.output, result, args.execute)
         print(json.dumps(result, indent=2))

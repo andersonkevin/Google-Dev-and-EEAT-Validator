@@ -32,8 +32,13 @@ repository. Commands below use placeholders, not real paths.
 
    ```sh
    python3 -B tools/validate_draft.py /private/review/bundle.json --references-only
+   python3 -B tools/validate_draft.py /private/review/bundle.json --references-only --review-plan
    python3 -B tools/validate_draft.py /private/review/bundle.json --references-only --review-template
    ```
+
+   The plan groups source sections and pending evidence needs. It preserves normal
+   readiness exit codes and all source gates; it does not fetch or approve anything.
+   Use it to organize research, then regenerate the fingerprint after adding evidence.
 
 4. Evaluate each applicable editorial rule and each of the 20 contextual criteria.
    The template is unresolved by design. Do not fill it with repeated passes.
@@ -48,6 +53,8 @@ repository. Commands below use placeholders, not real paths.
 6. Review rendered/live conditions only with actual captures or observation receipts.
    HTML alone cannot establish keyboard behavior, visual usability or HTTP status.
    Keep missing observations outstanding; never fabricate a browser pass.
+   Inspect the activated states of HTML-hidden panels. The static link-name check
+   reports exclusions; a pass on initial markup does not test revealed content.
 
 ## Decisions and Provenance
 
@@ -84,3 +91,5 @@ Export only to a new authorized directory with `--output ... --execute`.
 See [the walkthrough](../../docs/AGENT-REVIEW.md) for a synthetic correction
 example and [calibration](../../docs/CALIBRATION.md) for evaluator testing.
 Agreement with labels copied from your own verdicts is not independent accuracy.
+Use [the integration guide](../../docs/INTEGRATION.md) when a project or editorial
+engine consumes the tool; preserve its native contracts and private evidence.

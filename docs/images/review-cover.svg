@@ -4,7 +4,7 @@
   <rect width="1280" height="480" rx="12" fill="#101917"/>
   <path d="M0 1H1280" stroke="#74dfb3" stroke-width="3"/>
   <g font-family="Arial, Helvetica, sans-serif">
-    <text x="48" y="56" fill="#a7c9bc" font-size="16" font-weight="700">EDITORIAL REVIEW / TOOL + SKILL / v2.0.0</text>
+    <text x="48" y="56" fill="#a7c9bc" font-size="16" font-weight="700">EDITORIAL REVIEW / TOOL + SKILL / v2.1.0</text>
     <text x="48" y="132" fill="#f5f8f6" font-size="52" font-weight="700">Review the draft.</text>
     <text x="48" y="194" fill="#74dfb3" font-size="52" font-weight="700">Keep the evidence.</text>
     <text x="48" y="243" fill="#c6d6ce" font-size="20">Google Dev and E-E-A-T Validator</text>

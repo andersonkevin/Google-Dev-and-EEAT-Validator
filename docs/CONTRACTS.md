@@ -103,6 +103,44 @@ separate; they are not a score. publication_approved and reviewer_identity_verif
 are always false. V1 receipts must be replaced by fresh review, not migrated by
 editing their schema or fingerprint without reassessment.
 
+## Review Plan
+
+`--review-plan` prints schema 1 with `kind: review_plan`. It is a read-only view of
+the normal validation result, not a review receipt or source verification.
+It may be combined with `--reviews` to show remaining work after a current review.
+It cannot be combined with `--review-template`, `--coverage`, `--output` or
+`--execute`. It retains normal readiness exit codes: 0, 2 or 3; invalid input is 1.
+Unlike the receipt scaffold, successfully printing a plan does not always exit 0.
+
+The plan retains validator version, fingerprint, stage, page type, readiness,
+review error and source-assurance state. `publication_approved` remains false.
+
+- `mechanical_failures`: automatic failures with locations and remediation.
+- `review_tasks`: unresolved or failed editorial, rendered and live checks,
+  including explicit scope conflicts.
+- `criterion_tasks`: unresolved or failed criteria with scope, exceptions,
+  evidence requirements and any current decision.
+- `sources`: every required source document, grouped without URL fragments,
+  with exact cited `sections`, associated rule/criterion IDs, pending IDs,
+  current status and any current decision. `required` is always true.
+- `static_scope_notes`: the link-name check's reported scope, including any
+  HTML-hidden link exclusions that require activated-state review.
+
+Grouping does not narrow the catalog-wide source requirement: even a document
+linked only to inactive rules remains required. Existing pass/not_applicable
+decisions remove resolved tasks from the queue, not from the underlying report.
+A stale receipt supplies no decisions to either output. The plan never fetches
+sources, collects evidence or creates assessments. Use the full report and
+original receipt for provenance and final handoff.
+
+`ANCHOR-003` skips links with HTML `hidden` ancestry in the supplied state and
+discloses how many were excluded. This does not exempt visible links whose
+children are hidden, or focusable links hidden only from the accessibility tree
+with `aria-hidden`. CSS visibility, future revealed states and browser accessible
+names require rendered review. Other link checks retain their existing scope.
+
+See [integration guidance](INTEGRATION.md) for a project-neutral adapter sequence.
+
 ## Optional Local Source Snapshot
 
 No reference snapshot is included. A compatible snapshot is an operator-prepared
@@ -168,6 +206,10 @@ kind, split, page_type, method and labeler_kind. AI review agreement is not
 independent accuracy; identity and label independence are not authenticated.
 No denominator gives null, not a claimed zero error rate. Unresolved results are
 not successes. Choose either --snapshot or --references-only, matching the fingerprint.
+Exact draft bytes cannot occur in both development and holdout, even with different
+bundle context. `dataset_summary` adds per-case coverage counts, unique draft count
+and declared-provenance warnings; it does not detect semantic leakage or authenticate
+labelers. Existing evaluation schema versions remain unchanged.
 Exit 0 means no mismatch/unresolved in the supplied set, 1 invalid input, 2 a mismatch
 or unresolved result. Evaluation never issues release approval or calibration claims.
 See [CALIBRATION.md](CALIBRATION.md).

@@ -1,5 +1,37 @@
 # Changelog
 
+## 2.1.0 - 2026-10-20
+
+- Fix `ANCHOR-003` false positives for links in HTML-hidden interactive states;
+  disclose excluded links and retain checks on exposed or ARIA-hidden focusable links.
+- Add read-only `--review-plan` output with grouped source sections, pending rules,
+  contextual evidence needs and unchanged readiness/receipt/source gates.
+- Document project-neutral integration and evidence-reuse boundaries.
+- Add `tools/describe.py` for machine-readable versions and integration contracts.
+- Reject identical draft bytes across evaluation development/holdout splits and
+  disclose dataset coverage, unspecified labelers and shared reviewer/model provenance.
+- Add synthetic regressions for hidden/revealed states, planning, stale reviews,
+  source conflicts, CLI exit codes and no-write/path-safety behavior.
+
+No new dependencies, network calls, model integrations or automatic decisions.
+Existing bundle/report/receipt versions remain unchanged; plan schema is 1.
+Engine changes invalidate earlier review fingerprints and require reassessment.
+The criterion mapping remains 2.0.0; the tool and rule catalog are 2.1.0.
+Existing consumers with exact 2.0.0 pins must opt into 2.1.0 explicitly.
+No independent calibration claim is made.
+
+The initial optimization checkpoint on 2026-10-20 passed 136 tests, the synthetic
+walkthrough and the 36-file source audit before the contract-discovery and
+evaluation-design additions. A read-only private
+interactive-page regression changed only `ANCHOR-003` among mechanical results,
+preserved previous artifacts and rejected the earlier receipt as stale. No
+private content is included in the distribution.
+
+Final local release checks: 144 tests, the synthetic review walkthrough and the
+38-file source audit passed. The consuming editorial checker also passed its
+83-test suite with this engine selected explicitly; all inputs were synthetic.
+These checks do not establish independent editorial calibration.
+
 ## 2.0.0 - 2026-10-08
 
 Agent-operated editorial review, with human publication ownership.

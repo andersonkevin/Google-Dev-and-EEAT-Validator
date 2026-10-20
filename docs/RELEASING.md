@@ -23,7 +23,7 @@ its action/runtime infrastructure. Do not infer Windows qualification from this 
 ## Package
 
 ```sh
-python3 -B tools/release.py --archive /private/output/Google-Dev-and-EEAT-Validator-v2.0.0.zip --execute
+python3 -B tools/release.py --archive /private/output/Google-Dev-and-EEAT-Validator-v2.1.0.zip --execute
 ```
 
 The output parent must already exist. Existing files and symlinks are rejected;
@@ -40,6 +40,8 @@ Create a new version tag, never move an existing release tag. Attach the verifie
 ZIP and its checksum to the corresponding GitHub Release. Publication is an
 operator action; the release tool and CI do not push, tag or create releases.
 
-For v2, explain breaking receipt/report schemas, the agent-operated skill,
-criterion-level review, source attestations and evaluation limitations. Do not
-describe synthetic test success as completed real-content calibration.
+For v2.1.0, explain the hidden-state correction, review plan, contract discovery
+and evaluation-design safeguards. Bundle/receipt/report schemas remain 1/2/2;
+the criterion mapping remains 2.0.0 while the tool/catalog are 2.1.0. Exact-version
+consumer pins require explicit updates and engine changes require fresh receipts.
+Do not describe synthetic success as completed real-content calibration.

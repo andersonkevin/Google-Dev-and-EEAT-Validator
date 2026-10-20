@@ -12,7 +12,7 @@ The checks are informed by Google Search Central, developer writing guidance
 and E-E-A-T. Your operating AI agent evaluates the copy; the CLI checks structure,
 evidence references and decision integrity. A person retains publication approval.
 
-**v2.0.0** | **Python 3.10+** | **Tool + agent skill** | **MIT**
+**v2.1.0** | **Python 3.10+** | **Tool + agent skill** | **MIT**
 
 [Quick start](#quick-start) / [Review workflow](#review-workflow) /
 [E-E-A-T coverage](#e-e-a-t-with-evidence) / [Documentation](#documentation)
@@ -60,7 +60,7 @@ The example produces a JSON report. Selected fields from its output:
 
 ```json
 {
-  "validator_version": "2.0.0",
+  "validator_version": "2.1.0",
   "stage": "draft",
   "page_type": "article",
   "readiness": "review_required",
@@ -122,6 +122,19 @@ The agent records its model/run and whether it wrote the draft. A same-agent rev
 is disclosed, not presented as independent evaluation. Neither AI nor human review
 receipts grant publication approval.
 [See the complete workflow](docs/WORKFLOW.md).
+
+For a focused work queue and source sections grouped by document:
+
+```sh
+python3 -B tools/validate_draft.py examples/bundle.json --references-only --review-plan
+```
+
+The plan lists mechanical failures, pending assessments and their evidence needs.
+It preserves readiness and the normal exit codes; the example still exits 2.
+Add `--reviews PATH` to inspect outstanding work after a review. It performs no
+fetching or writing and generates no decisions. See the
+[plan contract](docs/CONTRACTS.md#review-plan) and
+[project integration guide](docs/INTEGRATION.md).
 
 ## E-E-A-T with Evidence
 
@@ -205,6 +218,7 @@ the source allowlist read-only unless archive writing is explicitly requested.
 | Prepare a draft and evidence bundle | [Input and output contracts](docs/CONTRACTS.md) / [Synthetic example](examples/bundle.json) |
 | Run a human-supervised review | [Editorial workflow](docs/WORKFLOW.md) |
 | Operate the evaluator with an AI agent | [Skill](skills/google-dev-eeat-review/SKILL.md) / [Walkthrough](docs/AGENT-REVIEW.md) |
+| Use the validator across projects | [Integration boundaries and operator sequence](docs/INTEGRATION.md) |
 | Measure agreement without overstating accuracy | [Calibration protocol](docs/CALIBRATION.md) |
 | Understand the E-E-A-T mapping | [Coverage and gaps](docs/EEAT.md) / [Criterion map](references/eeat-map.json) |
 | Inspect the checks and their sources | [Rule catalog](tools/rule_catalog.py) / [Source-linked interpretations](references/validator-rules.json) |

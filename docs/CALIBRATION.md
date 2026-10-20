@@ -43,6 +43,18 @@ synthetic/real, development/holdout, article/landing, method and labeler kind.
 Inspect resolved_fraction: unresolved cases are excluded from binary denominators,
 not counted as successes. Empty denominators are null.
 
+The evaluator rejects exact draft-byte reuse across development and holdout,
+including when brief or evidence changes produce different fingerprints. It does
+not detect paraphrases, shared passages or other semantic leakage. Same-split
+variants remain allowed; `dataset_summary.unique_draft_count` exposes repetitions.
+
+`dataset_summary` also lists case counts by split, kind, brand and page type, and
+warnings for missing development/holdout/real cases, unspecified labeler kinds,
+the same declared labeler/reviewer identity, the same exposed AI model, and a
+reviewer who authored the content. Warnings do not establish identity or change
+the evaluation's mismatch-based exit codes. Distinct names/models do not prove
+independence. Review the design before interpreting any agreement metric.
+
 No result is a ranking score, release approval or verified independence claim.
 `calibration_status: not_established` stays explicit. Document any subsequent
 calibrated scope and acceptance separately; a successful script run cannot establish it.
