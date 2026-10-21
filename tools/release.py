@@ -17,12 +17,12 @@ FILES = (
     'NOTICE.md', 'README.md', 'SECURITY.md', 'VERSION',
     '.github/workflows/tests.yml',
     'docs/CONTRACTS.md', 'docs/EEAT.md', 'docs/WORKFLOW.md', 'docs/AGENT-REVIEW.md',
-    'docs/CALIBRATION.md', 'docs/RELEASING.md', 'docs/INTEGRATION.md', 'docs/images/review-cover.svg',
+    'docs/CALIBRATION.md', 'docs/APPLICABILITY.md', 'docs/EDITORIAL-TRACE.md', 'docs/RELEASING.md', 'docs/INTEGRATION.md', 'docs/images/review-cover.svg',
     'examples/bundle.json', 'examples/draft.html', 'examples/evidence.txt', 'examples/review_walkthrough.py',
-    'references/eeat-map.json', 'references/validator-rules.json',
+    'references/eeat-map.json', 'references/validator-rules.json', 'references/applicability-matrix.json',
     'skills/google-dev-eeat-review/SKILL.md', 'skills/google-dev-eeat-review/agents/openai.yaml',
-    'tests/test_validator.py', 'tests/test_distribution.py', 'tests/test_v2.py', 'tests/test_release.py', 'tests/test_review_plan.py', 'tests/test_integration_contract.py',
-    'tools/validate_draft.py', 'tools/rule_catalog.py', 'tools/knowledge.py', 'tools/evaluate_validator.py', 'tools/release.py', 'tools/describe.py',
+    'tests/test_validator.py', 'tests/test_distribution.py', 'tests/test_v2.py', 'tests/test_release.py', 'tests/test_review_plan.py', 'tests/test_integration_contract.py', 'tests/test_evaluation_v2.py', 'tests/test_editorial_audit.py',
+    'tools/validate_draft.py', 'tools/rule_catalog.py', 'tools/knowledge.py', 'tools/evaluate_validator.py', 'tools/evaluation_metrics.py', 'tools/applicability.py', 'tools/editorial_audit.py', 'tools/release.py', 'tools/describe.py',
 )
 
 

@@ -1,5 +1,46 @@
 # Changelog
 
+## 2.2.0 - 2026-10-21
+
+- Update CI to SHA-pinned checkout v7.0.1 and setup-python v7.0.0 on Node 24;
+  preserve the test matrix, read-only permissions and disabled credential persistence.
+- Add a read-only editorial trace audit with compatible per-source/claim and
+  passage-level decision annotations, explicit assurance layers and role-based
+  next actions. Preserve native reports, gates and exit codes; metadata coverage
+  is not factual verification. Optional shared-capture checks reject changed bytes
+  without inheriting source attestations or article judgments.
+- Add a versioned applicability reference for all 46 rules and 20 contextual
+  criteria, resolving sources, stage gates, evidence, exceptions, profile differences
+  and automation limits without changing production validation policy.
+- Add opt-in evaluation manifest 2/report 3: separate applicability, verdicts and
+  uncertainty; expose wrong exclusions, check-level false blocks, critical escapes,
+  unresolved failures, full status confusion and per-check/page-type counts.
+- Bind new evaluation reports to matrix/code hashes and retain original bundle,
+  receipt and fingerprint integrity; reject stale supplied receipts in manifest 2.
+- Require declared source-family identity for manifest 2 and reject families or
+  exact draft bytes crossing development/holdout; no semantic lineage detector.
+- Preserve manifest 1/report 2, production bundle/report/receipt contracts and
+  current gate severity. Discovery advertises both evaluation pairs without
+  replacing legacy scalar fields.
+- Add temporary synthetic regressions and document uncertainty/proxy limitations.
+
+No real corpus, reviewer roster, calibration result, runtime dependencies,
+network/model calls or project adapter is added. Tool/catalog version is 2.2.0;
+the criterion mapping remains 2.0.0 and the applicability matrix remains 1.0.0.
+Production gate logic, severity and criterion meanings are unchanged. The release
+version/catalog metadata changes native fingerprints: reassess earlier receipts,
+never replace only their fingerprint. Exact-version consumers must opt in to this
+release; publishing it does not update private integrations.
+
+Implementation checks: 179 synthetic tests, the synthetic correction walkthrough
+and the 43-file distribution audit passed. These are software checks, not editorial
+calibration or human acceptance.
+
+Subsequent editorial-trace checkpoint: 195 synthetic tests, the correction
+walkthrough and the 46-file source audit passed. Production engine/catalog/map
+files were unchanged at that checkpoint. Release preparation updates version/catalog
+metadata and documentation only. The trace audit adds no automatic semantic judgment.
+
 ## 2.1.0 - 2026-10-20
 
 - Fix `ANCHOR-003` false positives for links in HTML-hidden interactive states;

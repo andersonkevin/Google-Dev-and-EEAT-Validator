@@ -15,6 +15,12 @@ def describe():
             "observation": 1, "review_plan": 1,
             "evaluation_manifest": 1, "evaluation_report": 2,
         },
+        "supported_evaluation_contracts": [{"manifest": 1, "report": 2}, {"manifest": 2, "report": 3}],
+        "applicability_matrix": {
+            "schema_version": 1, "matrix_version": "1.0.0", "entry_count": 66,
+            "reference": "references/applicability-matrix.json", "automatic_decisions": False,
+        },
+        "editorial_audit_contract": 1,
         "mapping_version": criteria_map()["mapping_version"],
         "catalog_version": criteria_map()["catalog_version"],
         "page_types": ["article", "landing"],
@@ -25,6 +31,7 @@ def describe():
             "describe": "tools/describe.py",
             "validate": "tools/validate_draft.py",
             "evaluate": "tools/evaluate_validator.py",
+            "editorial_audit": "tools/editorial_audit.py",
         },
         "validation_exit_codes": {
             "0": "ready_for_owner_review", "1": "invalid_input",

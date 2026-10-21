@@ -5,6 +5,8 @@ from pathlib import Path
 import sys
 
 from validate_draft import canonical, nonempty, read_input, read_json, sha, valid_date, validate
+from applicability import applicability_matrix
+from evaluation_metrics import build_report, compare, validate_label
 
 
 def summarize(rows):
@@ -20,13 +22,16 @@ def evaluate(manifest_path, snapshot=None, references_only=False):
     root = manifest_path.parent.resolve()
     raw = read_input(root, manifest_path.name)
     manifest = read_json(raw)
-    if not isinstance(manifest, dict) or type(manifest.get("schema_version")) is not int or manifest["schema_version"] != 1:
-        raise ValueError("Expected evaluation schema_version 1")
+    if not isinstance(manifest, dict) or type(manifest.get("schema_version")) is not int or manifest["schema_version"] not in (1, 2):
+        raise ValueError("Expected evaluation schema_version 1 or 2")
+    version = manifest["schema_version"]
+    matrix = applicability_matrix() if version == 2 else None
+    matrix_entries = {r["id"]: r for r in matrix["entries"]} if matrix else {}
     cases = manifest.get("cases")
     if not isinstance(cases, list) or not cases:
         raise ValueError("Evaluation requires pre-labeled cases")
     rows, seen = [], set()
-    content_splits, dataset_cases, warnings = {}, [], []
+    content_splits, dataset_cases, warnings, family_splits = {}, [], [], {}
     for case in cases:
         if not isinstance(case, dict) or not nonempty(case.get("id")) or case["id"] in seen:
             raise ValueError("Invalid or duplicate evaluation case")
@@ -41,8 +46,16 @@ def evaluate(manifest_path, snapshot=None, references_only=False):
         if labeler_kind == "ai" and not nonempty(case.get("labeler_model")):
             raise ValueError("AI labels require model provenance")
         expected = case.get("expected")
-        if not isinstance(expected, dict) or not expected or any(v not in ("pass", "fail") for v in expected.values()):
-            raise ValueError("Expected findings must be independently labeled pass/fail")
+        if not isinstance(expected, dict) or not expected or (version == 1 and any(v not in ("pass", "fail") for v in expected.values())):
+            raise ValueError("Expected findings must be independently labeled pass/fail" if version == 1
+                             else "V2 expected findings require nonempty pre-labeled decisions")
+        if version == 2:
+            family = case.get("source_family_id")
+            if not nonempty(family) or family != family.strip():
+                raise ValueError("V2 cases require a source_family_id for originals and all derivatives")
+            if family in family_splits and family_splits[family] != case["split"]:
+                raise ValueError("Source family crosses development/holdout: " + family)
+            family_splits[family] = case["split"]
         bundle_raw = read_input(root, case.get("bundle"))
         if case.get("bundle_sha256") != sha(bundle_raw):
             raise ValueError("Labeled bundle has changed")
@@ -54,6 +67,8 @@ def evaluate(manifest_path, snapshot=None, references_only=False):
                 raise ValueError("Evaluation review receipt has changed or is not hash-bound")
             review_path = root / case["reviews"]
         report = validate(bundle_path, snapshot, review_path, references_only)
+        if version == 2 and report["review_error"]:
+            raise ValueError("Evaluation review receipt is stale; preserve labels and reassess")
         if case.get("fingerprint") != report["fingerprint"]:
             raise ValueError("Evaluation fingerprint changed; preserve labels and explicitly rebaseline")
         content_hash = report["content_sha256"]
@@ -64,6 +79,12 @@ def evaluate(manifest_path, snapshot=None, references_only=False):
         content_splits[content_hash] = {"split": case["split"], "case_id": case["id"]}
         dataset_cases.append({key: case[key] for key in ("id", "kind", "split", "brand")}
                              | {"page_type": report["page_type"]})
+        if version == 2:
+            dataset_cases[-1].update({"source_family_id": family, "stage": report["stage"],
+                "bundle_sha256": sha(bundle_raw), "fingerprint": report["fingerprint"],
+                "report_sha256": sha(canonical(report)), "reviews_sha256": report["review_receipt_sha256"],
+                "readiness": report["readiness"], "source_verification": report["source_verification"]})
+        evidence_ids = {e["id"] for e in read_json(bundle_raw)["evidence"]} if version == 2 else set()
         actor = report["review_actor"] or {}
         if labeler_kind == "unspecified":
             warnings.append({"case_id": case["id"], "code": "labeler_kind_unspecified"})
@@ -83,6 +104,19 @@ def evaluate(manifest_path, snapshot=None, references_only=False):
                 raise ValueError("Unknown expected rule")
             finding = findings[rid]
             observed = finding["status"]
+            if version == 2:
+                validate_label(label, finding, evidence_ids)
+                entry = matrix_entries[rid]
+                rows.append({"case_id": case["id"], "kind": case["kind"], "split": case["split"],
+                    "brand": case["brand"], "page_type": report["page_type"], "stage": report["stage"],
+                    "rule_id": rid, "check_kind": entry["kind"], "family": finding["family"],
+                    "method": finding["method"], "severity": entry["severity"],
+                    "basis_class": entry["basis_class"], "source_family_id": family,
+                    "failure_blocks": entry["severity"] != "warning",
+                    "scope_conflict": finding.get("scope_conflict", False),
+                    "labeler_kind": labeler_kind, "reviewer_kind": actor.get("kind", "none"),
+                    **compare(label, finding)})
+                continue
             outcome = "unresolved" if observed not in ("pass", "fail") else {
                 ("fail", "fail"): "true_positive", ("pass", "fail"): "false_positive",
                 ("fail", "pass"): "false_negative", ("pass", "pass"): "true_negative",
@@ -93,15 +127,19 @@ def evaluate(manifest_path, snapshot=None, references_only=False):
                          "method": finding["method"], "labeler_kind": labeler_kind,
                          "reviewer_kind": (report["review_actor"] or {}).get("kind", "none"),
                          "observed": observed, "outcome": outcome})
-    groups = []
-    for key in sorted({(r["kind"], r["split"], r["page_type"], r["method"], r["labeler_kind"]) for r in rows}):
-        selected = [r for r in rows if (r["kind"], r["split"], r["page_type"], r["method"], r["labeler_kind"]) == key]
-        groups.append(dict(zip(("kind", "split", "page_type", "method", "labeler_kind"), key)) | summarize(selected))
     for field, value, code in (("split", "holdout", "no_holdout_cases"),
                                ("split", "development", "no_development_cases"),
                                ("kind", "real", "no_real_content_cases")):
         if not any(c[field] == value for c in dataset_cases):
             warnings.append({"case_id": None, "code": code})
+    if version == 2:
+        engine_hash = sha(b"".join(Path(__file__).with_name(name).read_bytes() for name in
+                                   ("evaluate_validator.py", "evaluation_metrics.py", "applicability.py")))
+        return build_report(rows, dataset_cases, warnings, len(content_splits), sha(raw), matrix, engine_hash)
+    groups = []
+    for key in sorted({(r["kind"], r["split"], r["page_type"], r["method"], r["labeler_kind"]) for r in rows}):
+        selected = [r for r in rows if (r["kind"], r["split"], r["page_type"], r["method"], r["labeler_kind"]) == key]
+        groups.append(dict(zip(("kind", "split", "page_type", "method", "labeler_kind"), key)) | summarize(selected))
     return {"schema_version": 2, "manifest_sha256": sha(raw), "case_count": len(cases),
             **summarize(rows), "results": rows, "groups": groups,
             "automatic_metrics": summarize([r for r in rows if r["method"] == "auto"]),
@@ -128,6 +166,8 @@ def main():
     try:
         result = evaluate(args.manifest, args.snapshot, args.references_only)
         print(canonical(result).decode())
+        if result["schema_version"] == 3:
+            return 0 if result["comparison_status"] == "matched_supplied_labels" else 2
         counts = result["counts"]
         return 2 if any(counts.get(k, 0) for k in ("false_positive", "false_negative", "unresolved")) else 0
     except (ValueError, OSError, KeyError, TypeError, RecursionError) as exc:
