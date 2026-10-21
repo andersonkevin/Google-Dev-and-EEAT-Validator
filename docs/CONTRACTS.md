@@ -284,7 +284,9 @@ Report 3 provides:
 - Groups by kind/split/page type/method/labeler kind, per-check and per-page-type
   summaries, exact source-family counts, per-case readiness and report hashes.
 - Matrix version/hash and evaluation-code hash. These identify evaluation policy;
-  production validation fingerprints and prior review contracts are unchanged.
+  matrix/evaluation code does not enter production validation fingerprints and prior
+  review schemas are unchanged. The v2.2.0 version/catalog bump does change native
+  fingerprints, so earlier receipts require fresh assessment.
 
 Exit 0 means supplied status and applicability expectations match, including
 correctly expected uncertainty; 2 means disagreement or unresolved comparison;

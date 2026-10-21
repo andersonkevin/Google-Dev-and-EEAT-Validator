@@ -12,15 +12,15 @@ The checks are informed by Google Search Central, developer writing guidance
 and E-E-A-T. Your operating AI agent evaluates the copy; the CLI checks structure,
 evidence references and decision integrity. A person retains publication approval.
 
-**v2.1.0** | **Python 3.10+** | **Tool + agent skill** | **MIT**
+**v2.2.0** | **Python 3.10+** | **Tool + agent skill** | **MIT**
 
-Unreleased working-tree additions: a **66-entry applicability reference** and
+New in v2.2.0: a **66-entry applicability reference** and
 opt-in **evaluation manifest 2/report 3**, separating scope, defects and uncertainty.
 Legacy evaluation and production validation contracts remain unchanged.
 No real-content corpus or independent calibration is bundled.
 [Applicability boundaries](docs/APPLICABILITY.md) / [Evaluation contract](docs/CONTRACTS.md#applicability-aware-evaluation).
 
-An optional unreleased [editorial trace audit](docs/EDITORIAL-TRACE.md) separates
+An optional [editorial trace audit](docs/EDITORIAL-TRACE.md) separates
 mechanical findings from operator judgments and connects claims to specific
 source notes. It preserves native readiness; annotation coverage is not accuracy.
 
@@ -70,7 +70,7 @@ The example produces a JSON report. Selected fields from its output:
 
 ```json
 {
-  "validator_version": "2.1.0",
+  "validator_version": "2.2.0",
   "stage": "draft",
   "page_type": "article",
   "readiness": "review_required",

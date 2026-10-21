@@ -2,7 +2,7 @@
   "schema_version": 1,
   "matrix_version": "1.0.0",
   "prepared_at": "2026-10-20",
-  "catalog_version": "2.1.0",
+  "catalog_version": "2.2.0",
   "mapping_version": "2.0.0",
   "status": "review_reference_not_calibrated",
   "policy": "Local interpretation of linked guidance, not Google's ranking rules. This matrix does not override validator gates or generate review decisions.",

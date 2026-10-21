@@ -90,9 +90,10 @@ same-agent review into independent accuracy.
 
 ## Current Status
 
-The working tree adds the 66-entry applicability reference and opt-in evaluator
-contract using synthetic regressions only. This is unreleased work; the existing
-tool/catalog version remains 2.1.0. There are no production gate changes.
+V2.2.0 adds the 66-entry applicability reference and opt-in evaluator contract
+using synthetic regressions only. The tool/catalog version is 2.2.0; criterion
+meanings and production gate policy are unchanged. The version bump changes
+native fingerprints, so earlier receipts require fresh assessment.
 
 V2 provides actor provenance, evaluator tooling and a synthetic walkthrough. It
 does not include client content, independently adjudicated real-content labels,

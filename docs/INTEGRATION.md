@@ -34,19 +34,23 @@ contracts before invocation; do not silently substitute another version.
 python3 -B tools/describe.py
 ```
 
-This read-only discovery command needs no project input. For 2.1.0, the tool and
-catalog versions are 2.1.0 and the unchanged criterion mapping is 2.0.0.
+This read-only discovery command needs no project input. For 2.2.0, the tool and
+catalog versions are 2.2.0 and the unchanged criterion mapping is 2.0.0.
 Compare the explicit schemas below rather than assuming all version strings
-must match. An exact 2.0.0 consumer pin is not silently compatible with 2.1.0.
+must match. Exact 2.0.0 or 2.1.0 consumer pins require an explicit upgrade to 2.2.0.
 Consumers may use a complete, hash-verified distribution stored locally; keep it
 unchanged and update it from a reviewed upstream release rather than forking rules.
 
-Unreleased working-tree evaluation changes opt into manifest 2/report 3 through
+V2.2.0 evaluation changes opt into manifest 2/report 3 through
 `supported_evaluation_contracts`; the legacy scalar fields remain manifest 1/report 2.
 These evaluation schemas do not alter production validation/receipt contracts.
 The [applicability reference](APPLICABILITY.md) provides scope guidance without
 installing an adapter or automatically deciding exceptions. Record the matrix and
 evaluation hashes returned by the evaluator as well as the checkout state.
+
+The v2.2.0 version/catalog metadata changes native fingerprints despite unchanged
+production gate logic. Reassess earlier receipts against the selected release;
+do not replace only their fingerprint or silently update a consumer's pin.
 
 | Boundary | Contract |
 | --- | --- |

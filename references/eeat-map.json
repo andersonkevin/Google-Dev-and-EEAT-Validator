@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "mapping_version": "2.0.0",
-  "catalog_version": "2.1.0",
+  "catalog_version": "2.2.0",
   "prepared_at": "2026-10-08",
   "status": "criterion_level_review_required_not_automated_judgment",
   "scope": "Public research map for article and landing review. Citations are links, not bundled source text or proof of current coverage.",

@@ -3,7 +3,7 @@
 This optional read-only view connects claims and review decisions to specific
 evidence. It preserves the native report, readiness and exit codes. It does not
 detect truth, run a model, collect sources, create reviews or grant publication.
-It is an unreleased addition, not part of the published 2.1.0 distribution.
+It is included from v2.2.0 and is not available in the v2.1.0 distribution.
 
 ```sh
 python3 -B tools/editorial_audit.py /private/new-run/bundle.json --references-only --reviews /private/new-run/reviews.json

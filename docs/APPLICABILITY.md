@@ -69,7 +69,9 @@ The resolved matrix is available to local Python callers through
 `applicability_matrix()`; no new CLI, model call, network fetcher or integration
 is added. The evaluator uses its IDs/classification for reporting, not to generate
 gold labels. New evaluation reports bind the matrix hash and evaluation-code hash.
-Production bundle/report/receipt schemas and validation fingerprints are unchanged.
+Production bundle/report/receipt schemas are unchanged. The matrix/evaluation code
+does not enter native fingerprints, but v2.2.0 version/catalog metadata does change
+them. Earlier receipts require fresh assessment; see [integration](INTEGRATION.md).
 
 ## Validation and Deferred Decisions
 

@@ -30,7 +30,7 @@ read-only permissions, disabled credential persistence and existing checks intac
 ## Package
 
 ```sh
-python3 -B tools/release.py --archive /private/output/Google-Dev-and-EEAT-Validator-v2.1.0.zip --execute
+python3 -B tools/release.py --archive /private/output/Google-Dev-and-EEAT-Validator-v2.2.0.zip --execute
 ```
 
 The output parent must already exist. Existing files and symlinks are rejected;
@@ -47,8 +47,12 @@ Create a new version tag, never move an existing release tag. Attach the verifie
 ZIP and its checksum to the corresponding GitHub Release. Publication is an
 operator action; the release tool and CI do not push, tag or create releases.
 
-For v2.1.0, explain the hidden-state correction, review plan, contract discovery
-and evaluation-design safeguards. Bundle/receipt/report schemas remain 1/2/2;
-the criterion mapping remains 2.0.0 while the tool/catalog are 2.1.0. Exact-version
-consumer pins require explicit updates and engine changes require fresh receipts.
+For v2.2.0, explain the applicability reference, opt-in evaluation manifest 2/report 3,
+editorial trace audit and SHA-pinned Node 24 CI Actions. Production bundle/receipt/report
+schemas remain 1/2/2, and legacy evaluation manifest 1/report 2 remains supported.
+The criterion mapping remains 2.0.0 while the tool/catalog are 2.2.0. Production
+gate policy is unchanged, but version/catalog metadata changes native fingerprints.
+Exact-version consumer pins require explicit updates and earlier receipts require
+fresh assessment rather than a replaced fingerprint. Do not update private consumers
+as part of publishing this standalone release.
 Do not describe synthetic success as completed real-content calibration.
